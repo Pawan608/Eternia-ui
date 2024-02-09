@@ -64,10 +64,7 @@ import {
 const Home: NextPage = () => {
   return (
     <Box>
-      <SEO
-        title="Saas UI Landingspage"
-        description="Free SaaS landingspage starter kit"
-      />
+      <SEO title="Eternia Windows" description="Eternia Windows" />
       <Box>
         <HeroSection />
 
@@ -103,9 +100,9 @@ const HeroSection: React.FC = () => {
             }
             description={
               <FallInPlace delay={0.4} fontWeight="medium">
-                Saas UI is a <Em>React component library</Em>
+                Eternia Windows is a <Em>One solution</Em>
                 <Br /> that doesn&apos;t get in your way and helps you <Br />{" "}
-                build intuitive SaaS products with speed.
+                build intuitive products with speed.
               </FallInPlace>
             }
           >

@@ -1,0 +1,39 @@
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes placeholder {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  75% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Apply animations to microphone icon */
+.mic-active {
+  animation: blink 1s infinite;
+}
+
+/* Apply animations to input placeholder */
+.search_input input::placeholder {
+  animation: placeholder 1s steps(4, end) forwards;
+}
