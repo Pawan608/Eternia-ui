@@ -78,7 +78,7 @@ export const AnnouncementBanner: React.FC<AnnouncementBannerProps> = (
           colorScheme="purple"
           backgroundClip="padding-box"
           borderRadius="full"
-          maxW="400px"
+          maxW="800px"
           margin="0 auto"
           borderWidth="2px"
           borderTopWidth="0"
@@ -108,15 +108,6 @@ export const AnnouncementBanner: React.FC<AnnouncementBannerProps> = (
           }}
         >
           <HStack zIndex="2" w="100%">
-            {/* <BannerTitle fontWeight="semibold">{}</BannerTitle>
-              <BannerDescription
-                as={LinkOverlay}
-                href={href}
-                display={{ base: "none", md: "block" }}
-              >
-                {description}
-              </BannerDescription> */}
-            {/* <input type="search" name="" id="" /> */}
             <InputGroup w="100%" h="100%">
               <Input
                 type="search"
@@ -134,15 +125,14 @@ export const AnnouncementBanner: React.FC<AnnouncementBannerProps> = (
               />
               <InputLeftElement
                 pointerEvents="auto"
-                children={
-                  <Icon
-                    as={FaMicrophone}
-                    color={isMicActive ? "red.500" : "gray.500"}
-                  />
-                }
                 cursor="pointer"
                 onClick={handleSpeechRecognition}
-              />
+              >
+                <Icon
+                  as={FaMicrophone}
+                  color={isMicActive ? "red.500" : "gray.500"}
+                />
+              </InputLeftElement>
             </InputGroup>
           </HStack>
         </Banner>
