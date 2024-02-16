@@ -69,10 +69,7 @@ import { Layout } from "components/layout";
 const Home: NextPageWithLayout = () => {
   return (
     <Box>
-      <SEO
-        title="Saas UI Landingspage"
-        description="Free SaaS landingspage starter kit"
-      />
+      <SEO title="Eternia Windows" description="Eternia Windows" />
       <Box>
         <HeroSection />
 

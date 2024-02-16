@@ -8,8 +8,8 @@ import { Logo } from "./logo";
 const siteConfig = {
   logo: Logo,
   seo: {
-    title: "Eternia Windows",
-    description: "The Market Place for all the Amazing Softwares",
+    title: "Eternia",
+    description: "Get Advanced Software for your business management",
   } as NextSeoProps,
   termsUrl: "#",
   privacyUrl: "#",
@@ -60,7 +60,7 @@ const siteConfig = {
     ],
   },
   signup: {
-    title: "Start building with Saas UI",
+    title: "Start growing with Eternia",
     features: [
       {
         icon: FiCheck,

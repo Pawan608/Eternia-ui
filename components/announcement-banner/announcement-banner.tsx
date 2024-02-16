@@ -175,6 +175,7 @@
 //   );
 // };
 import NextLink from "next/link";
+import "./animation.module.css";
 import {
   Box,
   Container,
@@ -321,6 +322,8 @@ export const AnnouncementBanner: React.FC<AnnouncementBannerProps> = (
                   setSearchQuery(target.value);
                   handleInputChange(target.value); // Call handleInputChange on input change
                 }}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search_input"
               />
               <InputLeftElement
                 pointerEvents="auto"
