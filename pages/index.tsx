@@ -60,8 +60,13 @@ import {
   HighlightsItem,
   HighlightsTestimonialItem,
 } from "components/highlights";
-
-const Home: NextPage = () => {
+import { useRouter } from "next/router";
+import { useAuth } from "context/AuthProvider";
+import { useSearchStore } from "data/store";
+import { NextPageWithLayout } from "./_app";
+// import { useData } from "context/DataContext";
+import { Layout } from "components/layout";
+const Home: NextPageWithLayout = () => {
   return (
     <Box>
       <SEO
@@ -71,101 +76,107 @@ const Home: NextPage = () => {
       <Box>
         <HeroSection />
 
-        <HighlightsSection />
+        {/* <HighlightsSection /> */}
 
         <FeaturesSection />
 
         <TestimonialsSection />
 
-        <PricingSection />
+        {/* <PricingSection /> */}
 
-        <FaqSection />
+        {/* <FaqSection /> */}
       </Box>
     </Box>
   );
 };
 
+Home.getLayout = function getLayout(page: React.ReactElement) {
+  const { announcement, header, footer } = page.props;
+  return (
+    <Layout
+      announcementProps={announcement}
+      headerProps={header}
+      footerProps={footer}
+    >
+      {page}
+    </Layout>
+  );
+};
+
 const HeroSection: React.FC = () => {
+  const router = useRouter();
+  const { isAuthenticated } = useAuth();
+  const { isSearched } = useSearchStore();
   return (
     <Box position="relative" overflow="hidden">
       <BackgroundGradient height="100%" />
-      <Container maxW="container.xl" pt={{ base: 40, lg: 60 }} pb="40">
+      <Container maxW="container.xl" pt={{ base: 40, lg: 60 }} pb="10">
         <Stack direction={{ base: "column", lg: "row" }} alignItems="center">
-          <Hero
-            id="home"
-            justifyContent="flex-start"
-            px="0"
-            title={
-              <FallInPlace>
-                Build beautiful
-                <Br /> software faster
-              </FallInPlace>
-            }
-            description={
-              <FallInPlace delay={0.4} fontWeight="medium">
-                Saas UI is a <Em>React component library</Em>
-                <Br /> that doesn&apos;t get in your way and helps you <Br />{" "}
-                build intuitive SaaS products with speed.
-              </FallInPlace>
-            }
-          >
-            <FallInPlace delay={0.8}>
-              <HStack pt="4" pb="12" spacing="8">
-                <NextjsLogo height="28px" /> <ChakraLogo height="20px" />
-              </HStack>
-
-              <ButtonGroup spacing={4} alignItems="center">
-                <ButtonLink colorScheme="primary" size="lg" href="/signup">
-                  Sign Up
-                </ButtonLink>
-                <ButtonLink
-                  size="lg"
-                  href="https://demo.saas-ui.dev"
-                  variant="outline"
-                  rightIcon={
-                    <Icon
-                      as={FiArrowRight}
-                      sx={{
-                        transitionProperty: "common",
-                        transitionDuration: "normal",
-                        ".chakra-button:hover &": {
-                          transform: "translate(5px)",
-                        },
+          {isSearched ? (
+            ""
+          ) : (
+            <>
+              <Hero
+                id="home"
+                justifyContent="flex-start"
+                px="0"
+                title={
+                  <FallInPlace>
+                    Build Your Company
+                    <Br /> With Futuristic Softwares
+                  </FallInPlace>
+                }
+                description={
+                  <FallInPlace delay={0.4} fontWeight="medium">
+                    Eternia Windows <Em>Provides various Products</Em>
+                    <Br /> for efficient management of <Br /> your company
+                  </FallInPlace>
+                }
+              >
+                <FallInPlace delay={0.8}>
+                  <ButtonGroup spacing={4} alignItems="center" mt={2}>
+                    <ButtonLink
+                      colorScheme="primary"
+                      size="lg"
+                      href={isAuthenticated ? "#features" : "/signup"}
+                      onClick={() => {
+                        router.push(isAuthenticated ? "#features" : "/signup");
                       }}
+                    >
+                      {isAuthenticated ? "View Features" : "Sign Up"}
+                    </ButtonLink>
+                  </ButtonGroup>
+                </FallInPlace>
+              </Hero>
+
+              <Box
+                height="600px"
+                position="absolute"
+                display={{ base: "none", lg: "block" }}
+                left={{ lg: "60%", xl: "55%" }}
+                width="80vw"
+                maxW="1100px"
+                margin="0 auto"
+              >
+                <FallInPlace delay={1}>
+                  <Box overflow="hidden" height="100%">
+                    <Image
+                      src="/static/screenshots/list.png"
+                      layout="fixed"
+                      width={1200}
+                      height={762}
+                      alt="Screenshot of a ListPage in Saas UI Pro"
+                      quality="75"
+                      priority
                     />
-                  }
-                >
-                  View demo
-                </ButtonLink>
-              </ButtonGroup>
-            </FallInPlace>
-          </Hero>
-          <Box
-            height="600px"
-            position="absolute"
-            display={{ base: "none", lg: "block" }}
-            left={{ lg: "60%", xl: "55%" }}
-            width="80vw"
-            maxW="1100px"
-            margin="0 auto"
-          >
-            <FallInPlace delay={1}>
-              <Box overflow="hidden" height="100%">
-                <Image
-                  src="/static/screenshots/list.png"
-                  layout="fixed"
-                  width={1200}
-                  height={762}
-                  alt="Screenshot of a ListPage in Saas UI Pro"
-                  quality="75"
-                  priority
-                />
+                  </Box>
+                </FallInPlace>
               </Box>
-            </FallInPlace>
-          </Box>
+            </>
+          )}
         </Stack>
       </Container>
-
+      {/* 
       <Features
         id="benefits"
         columns={[1, 2, 4]}
@@ -269,7 +280,7 @@ const HeroSection: React.FC = () => {
           },
         ]}
         reveal={FallInPlace}
-      />
+      /> */}
     </Box>
   );
 };
@@ -391,8 +402,8 @@ const FeaturesSection = () => {
           textAlign="left"
           as="p"
         >
-          Not your standard
-          <Br /> dashboard template.
+          Futuristic Software
+          <Br /> with advance features.
         </Heading>
       }
       description={
@@ -406,194 +417,196 @@ const FeaturesSection = () => {
       align="left"
       columns={[1, 2, 3]}
       iconSize={4}
-      features={[
-        {
-          title: "Components.",
-          icon: FiBox,
-          description:
-            "All premium components are available on a private NPM registery, no more copy pasting and always up-to-date.",
-          variant: "inline",
-          listItems: [
-            "Manage customer interactions, sales pipelines, and marketing campaigns.",
-            "Track leads, contacts, deals, and opportunities in real-time.",
-          ],
-        },
-        {
-          title: "Starterkits.",
-          icon: FiLock,
-          description:
-            "Example apps in Next.JS, Electron. Including authentication, billing, example pages, everything you need to get started FAST.",
-          variant: "inline",
-          listItems: [
-            "Manage customer interactions, sales pipelines, and marketing campaigns.",
-            "Track leads, contacts, deals, and opportunities in real-time.",
-          ],
-        },
-        {
-          title: "Documentation.",
-          icon: FiSearch,
-          description:
-            "Extensively documented, including storybooks, best practices, use-cases and examples.",
-          variant: "inline",
-          listItems: [
-            "Manage customer interactions, sales pipelines, and marketing campaigns.",
-            "Track leads, contacts, deals, and opportunities in real-time.",
-          ],
-        },
-        {
-          title: "Onboarding.",
-          icon: FiUserPlus,
-          description:
-            "Add user onboarding flows, like tours, hints and inline documentation without breaking a sweat.",
-          variant: "inline",
-          listItems: [
-            "Manage customer interactions, sales pipelines, and marketing campaigns.",
-            "Track leads, contacts, deals, and opportunities in real-time.",
-          ],
-        },
-        {
-          title: "Feature flags.",
-          icon: FiFlag,
-          description:
-            "Implement feature toggles for your billing plans with easy to use hooks. Connect Flagsmith, or other remote config services once you're ready.",
-          variant: "inline",
-          listItems: [
-            "Manage customer interactions, sales pipelines, and marketing campaigns.",
-            "Track leads, contacts, deals, and opportunities in real-time.",
-          ],
-        },
-        {
-          title: "Upselling.",
-          icon: FiTrendingUp,
-          description:
-            "Components and hooks for upgrade flows designed to make upgrading inside your app frictionless.",
-          variant: "inline",
-          listItems: [
-            "Manage customer interactions, sales pipelines, and marketing campaigns.",
-            "Track leads, contacts, deals, and opportunities in real-time.",
-          ],
-        },
-        {
-          title: "Themes.",
-          icon: FiToggleLeft,
-          description:
-            "Includes multiple themes with darkmode support, always have the perfect starting point for your next project.",
-          variant: "inline",
-          listItems: [
-            "Manage customer interactions, sales pipelines, and marketing campaigns.",
-            "Track leads, contacts, deals, and opportunities in real-time.",
-          ],
-        },
-        {
-          title: "Generators.",
-          icon: FiTerminal,
-          description:
-            "Extend your design system while maintaininig code quality and consistency with built-in generators.",
-          variant: "inline",
-          listItems: [
-            "Manage customer interactions, sales pipelines, and marketing campaigns.",
-            "Track leads, contacts, deals, and opportunities in real-time.",
-          ],
-        },
-        {
-          title: "Monorepo.",
-          icon: FiCode,
-          description: (
-            <>
-              All code is available as packages in a high-performance{" "}
-              <Link href="https://turborepo.com">Turborepo</Link>, you have full
-              control to modify and adjust it to your workflow.
-            </>
-          ),
-          variant: "inline",
-          listItems: [
-            "Manage customer interactions, sales pipelines, and marketing campaigns.",
-            "Track leads, contacts, deals, and opportunities in real-time.",
-          ],
-        },
-        {
-          title: "Documentation.",
-          icon: FiSearch,
-          description:
-            "Extensively documented, including storybooks, best practices, use-cases and examples.",
-          variant: "inline",
-          listItems: [
-            "Manage customer interactions, sales pipelines, and marketing campaigns.",
-            "Track leads, contacts, deals, and opportunities in real-time.",
-          ],
-        },
-        {
-          title: "Onboarding.",
-          icon: FiUserPlus,
-          description:
-            "Add user onboarding flows, like tours, hints and inline documentation without breaking a sweat.",
-          variant: "inline",
-          listItems: [
-            "Manage customer interactions, sales pipelines, and marketing campaigns.",
-            "Track leads, contacts, deals, and opportunities in real-time.",
-          ],
-        },
-        {
-          title: "Feature flags.",
-          icon: FiFlag,
-          description:
-            "Implement feature toggles for your billing plans with easy to use hooks. Connect Flagsmith, or other remote config services once you're ready.",
-          variant: "inline",
-          listItems: [
-            "Manage customer interactions, sales pipelines, and marketing campaigns.",
-            "Track leads, contacts, deals, and opportunities in real-time.",
-          ],
-        },
-        {
-          title: "Upselling.",
-          icon: FiTrendingUp,
-          description:
-            "Components and hooks for upgrade flows designed to make upgrading inside your app frictionless.",
-          variant: "inline",
-          listItems: [
-            "Manage customer interactions, sales pipelines, and marketing campaigns.",
-            "Track leads, contacts, deals, and opportunities in real-time.",
-          ],
-        },
-        {
-          title: "Themes.",
-          icon: FiToggleLeft,
-          description:
-            "Includes multiple themes with darkmode support, always have the perfect starting point for your next project.",
-          variant: "inline",
-          listItems: [
-            "Manage customer interactions, sales pipelines, and marketing campaigns.",
-            "Track leads, contacts, deals, and opportunities in real-time.",
-          ],
-        },
-        {
-          title: "Generators.",
-          icon: FiTerminal,
-          description:
-            "Extend your design system while maintaininig code quality and consistency with built-in generators.",
-          variant: "inline",
-          listItems: [
-            "Manage customer interactions, sales pipelines, and marketing campaigns.",
-            "Track leads, contacts, deals, and opportunities in real-time.",
-          ],
-        },
-        {
-          title: "Monorepo.",
-          icon: FiCode,
-          description: (
-            <>
-              All code is available as packages in a high-performance{" "}
-              <Link href="https://turborepo.com">Turborepo</Link>, you have full
-              control to modify and adjust it to your workflow.
-            </>
-          ),
-          variant: "inline",
-          listItems: [
-            "Manage customer interactions, sales pipelines, and marketing campaigns.",
-            "Track leads, contacts, deals, and opportunities in real-time.",
-          ],
-        },
-      ]}
+      // features={[
+      //   {
+      //     title: "Components.",
+      //     icon: FiBox,
+      //     description:
+      //       "All premium components are available on a private NPM registery, no more copy pasting and always up-to-date.",
+      //     variant: "inline",
+      //     listItems: [
+      //       "Manage customer interactions, sales pipelines, and marketing campaigns.",
+      //       "Track leads, contacts, deals, and opportunities in real-time.",
+      //       "Manage customer interactions, sales pipelines, and marketing campaigns.",
+      //       "Track leads, contacts, deals, and opportunities in real-time.",
+      //     ],
+      //   },
+      //   {
+      //     title: "Starterkits.",
+      //     icon: FiLock,
+      //     description:
+      //       "Example apps in Next.JS, Electron. Including authentication, billing, example pages, everything you need to get started FAST.",
+      //     variant: "inline",
+      //     listItems: [
+      //       "Manage customer interactions, sales pipelines, and marketing campaigns.",
+      //       "Track leads, contacts, deals, and opportunities in real-time.",
+      //     ],
+      //   },
+      //   {
+      //     title: "Documentation.",
+      //     icon: FiSearch,
+      //     description:
+      //       "Extensively documented, including storybooks, best practices, use-cases and examples.",
+      //     variant: "inline",
+      //     listItems: [
+      //       "Manage customer interactions, sales pipelines, and marketing campaigns.",
+      //       "Track leads, contacts, deals, and opportunities in real-time.",
+      //     ],
+      //   },
+      //   {
+      //     title: "Onboarding.",
+      //     icon: FiUserPlus,
+      //     description:
+      //       "Add user onboarding flows, like tours, hints and inline documentation without breaking a sweat.",
+      //     variant: "inline",
+      //     listItems: [
+      //       "Manage customer interactions, sales pipelines, and marketing campaigns.",
+      //       "Track leads, contacts, deals, and opportunities in real-time.",
+      //     ],
+      //   },
+      //   {
+      //     title: "Feature flags.",
+      //     icon: FiFlag,
+      //     description:
+      //       "Implement feature toggles for your billing plans with easy to use hooks. Connect Flagsmith, or other remote config services once you're ready.",
+      //     variant: "inline",
+      //     listItems: [
+      //       "Manage customer interactions, sales pipelines, and marketing campaigns.",
+      //       "Track leads, contacts, deals, and opportunities in real-time.",
+      //     ],
+      //   },
+      //   {
+      //     title: "Upselling.",
+      //     icon: FiTrendingUp,
+      //     description:
+      //       "Components and hooks for upgrade flows designed to make upgrading inside your app frictionless.",
+      //     variant: "inline",
+      //     listItems: [
+      //       "Manage customer interactions, sales pipelines, and marketing campaigns.",
+      //       "Track leads, contacts, deals, and opportunities in real-time.",
+      //     ],
+      //   },
+      //   {
+      //     title: "Themes.",
+      //     icon: FiToggleLeft,
+      //     description:
+      //       "Includes multiple themes with darkmode support, always have the perfect starting point for your next project.",
+      //     variant: "inline",
+      //     listItems: [
+      //       "Manage customer interactions, sales pipelines, and marketing campaigns.",
+      //       "Track leads, contacts, deals, and opportunities in real-time.",
+      //     ],
+      //   },
+      //   {
+      //     title: "Generators.",
+      //     icon: FiTerminal,
+      //     description:
+      //       "Extend your design system while maintaininig code quality and consistency with built-in generators.",
+      //     variant: "inline",
+      //     listItems: [
+      //       "Manage customer interactions, sales pipelines, and marketing campaigns.",
+      //       "Track leads, contacts, deals, and opportunities in real-time.",
+      //     ],
+      //   },
+      //   {
+      //     title: "Monorepo.",
+      //     icon: FiCode,
+      //     description: (
+      //       <>
+      //         All code is available as packages in a high-performance{" "}
+      //         <Link href="https://turborepo.com">Turborepo</Link>, you have full
+      //         control to modify and adjust it to your workflow.
+      //       </>
+      //     ),
+      //     variant: "inline",
+      //     listItems: [
+      //       "Manage customer interactions, sales pipelines, and marketing campaigns.",
+      //       "Track leads, contacts, deals, and opportunities in real-time.",
+      //     ],
+      //   },
+      //   {
+      //     title: "Documentation.",
+      //     icon: FiSearch,
+      //     description:
+      //       "Extensively documented, including storybooks, best practices, use-cases and examples.",
+      //     variant: "inline",
+      //     listItems: [
+      //       "Manage customer interactions, sales pipelines, and marketing campaigns.",
+      //       "Track leads, contacts, deals, and opportunities in real-time.",
+      //     ],
+      //   },
+      //   {
+      //     title: "Onboarding.",
+      //     icon: FiUserPlus,
+      //     description:
+      //       "Add user onboarding flows, like tours, hints and inline documentation without breaking a sweat.",
+      //     variant: "inline",
+      //     listItems: [
+      //       "Manage customer interactions, sales pipelines, and marketing campaigns.",
+      //       "Track leads, contacts, deals, and opportunities in real-time.",
+      //     ],
+      //   },
+      //   {
+      //     title: "Feature flags.",
+      //     icon: FiFlag,
+      //     description:
+      //       "Implement feature toggles for your billing plans with easy to use hooks. Connect Flagsmith, or other remote config services once you're ready.",
+      //     variant: "inline",
+      //     listItems: [
+      //       "Manage customer interactions, sales pipelines, and marketing campaigns.",
+      //       "Track leads, contacts, deals, and opportunities in real-time.",
+      //     ],
+      //   },
+      //   {
+      //     title: "Upselling.",
+      //     icon: FiTrendingUp,
+      //     description:
+      //       "Components and hooks for upgrade flows designed to make upgrading inside your app frictionless.",
+      //     variant: "inline",
+      //     listItems: [
+      //       "Manage customer interactions, sales pipelines, and marketing campaigns.",
+      //       "Track leads, contacts, deals, and opportunities in real-time.",
+      //     ],
+      //   },
+      //   {
+      //     title: "Themes.",
+      //     icon: FiToggleLeft,
+      //     description:
+      //       "Includes multiple themes with darkmode support, always have the perfect starting point for your next project.",
+      //     variant: "inline",
+      //     listItems: [
+      //       "Manage customer interactions, sales pipelines, and marketing campaigns.",
+      //       "Track leads, contacts, deals, and opportunities in real-time.",
+      //     ],
+      //   },
+      //   {
+      //     title: "Generators.",
+      //     icon: FiTerminal,
+      //     description:
+      //       "Extend your design system while maintaininig code quality and consistency with built-in generators.",
+      //     variant: "inline",
+      //     listItems: [
+      //       "Manage customer interactions, sales pipelines, and marketing campaigns.",
+      //       "Track leads, contacts, deals, and opportunities in real-time.",
+      //     ],
+      //   },
+      //   {
+      //     title: "Monorepo.",
+      //     icon: FiCode,
+      //     description: (
+      //       <>
+      //         All code is available as packages in a high-performance{" "}
+      //         <Link href="https://turborepo.com">Turborepo</Link>, you have full
+      //         control to modify and adjust it to your workflow.
+      //       </>
+      //     ),
+      //     variant: "inline",
+      //     listItems: [
+      //       "Manage customer interactions, sales pipelines, and marketing campaigns.",
+      //       "Track leads, contacts, deals, and opportunities in real-time.",
+      //     ],
+      //   },
+      // ]}
     />
   );
 };
@@ -629,15 +642,15 @@ const TestimonialsSection = () => {
   );
 };
 
-const PricingSection = () => {
-  return (
-    <Pricing {...pricing}>
-      <Text p="8" textAlign="center" color="muted">
-        VAT may be applicable depending on your location.
-      </Text>
-    </Pricing>
-  );
-};
+// const PricingSection = () => {
+//   return (
+//     <Pricing {...pricing}>
+//       <Text p="8" textAlign="center" color="muted">
+//         VAT may be applicable depending on your location.
+//       </Text>
+//     </Pricing>
+//   );
+// };
 
 const FaqSection = () => {
   return <Faq {...faq} />;

@@ -1,0 +1,144 @@
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+interface Position {
+  x: number;
+  y: number;
+}
+
+type Product = {
+    id: string;
+    name: string;
+  };
+  
+  type Plan = {
+    id: string;
+    name: string;
+    products: Product[];
+  };
+
+  const plan = {
+    id: "plan1",
+    name: "Plan A",
+    products: [
+      { id: "product1", name: "Product 1" },
+      { id: "product2", name: "Product 2" },
+      // Add more products as needed
+    ],
+  };
+export default function RequestsPage() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [dragStart, setDragStart] = useState<Position>({ x: 0, y: 0 });
+  const [position, setPosition] = useState<Position>({ x: 50, y: 50 }); // Initial position of the draggable item
+  const [zoomLevel, setZoomLevel] = useState<number>(1); // State for managing zoom level
+  useEffect(() => {
+    draw();
+  }, [zoomLevel, position]); // Redraw when zoomLevel or position changes
+  const draw = () => {
+    const canvas = canvasRef.current!;
+    const ctx = canvas.getContext("2d")!;
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+    ctx.save(); // Save the current context state
+    ctx.scale(zoomLevel, zoomLevel); // Apply scaling based on the current zoom level
+  
+    // Draw the Plan
+    const planWidth = 100;
+    const planHeight = 50;
+    const planX = position.x;
+    const planY = position.y;
+    ctx.fillStyle = "blue";
+    ctx.fillRect(planX, planY, planWidth, planHeight);
+    ctx.fillStyle = "black";
+    ctx.fillText(plan.name, planX + 5, planY + 25);
+  
+    // Draw each Product linked to the Plan
+    plan.products.forEach((product, index) => {
+      const angle = (index / plan.products.length) * 2 * Math.PI; // Distribute products around the plan
+      const productX = planX + planWidth / 2 + Math.cos(angle) * 150; // Position product X based on angle
+      const productY = planY + planHeight / 2 + Math.sin(angle) * 150; // Position product Y based on angle
+  
+      // Draw line from Plan to Product
+      ctx.beginPath();
+      ctx.moveTo(planX + planWidth / 2, planY + planHeight / 2); // Start at Plan center
+      ctx.lineTo(productX, productY); // Line to Product
+      ctx.stroke();
+  
+      // Draw Product as a circle
+      ctx.beginPath();
+      ctx.arc(productX, productY, 20, 0, 2 * Math.PI);
+      ctx.fillStyle = "green";
+      ctx.fill();
+      ctx.fillStyle = "white";
+      ctx.fillText(product.name, productX - 10, productY + 5);
+    });
+  
+    ctx.restore(); // Restore the context state to undo the scaling
+  };
+  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const rect = canvasRef.current!.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    // Check if the mouse is inside the rectangle
+    if (
+      mouseX > position.x &&
+      mouseX < position.x + 100 &&
+      mouseY > position.y &&
+      mouseY < position.y + 100
+    ) {
+      setIsDragging(true);
+      setDragStart({ x: mouseX - position.x, y: mouseY - position.y });
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (isDragging) {
+      const rect = canvasRef.current!.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      setPosition({ x: mouseX - dragStart.x, y: mouseY - dragStart.y });
+      draw();
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+  // Handler to zoom in
+  const handleZoomIn = () => {
+    setZoomLevel((prevZoom) => prevZoom * 1.1); // Increase the zoom level by 10%
+  };
+
+  // Handler to zoom out
+  const handleZoomOut = () => {
+    setZoomLevel((prevZoom) => prevZoom * 0.9); // Decrease the zoom level by 10%
+  };
+
+  // Handler to reset the view
+  const handleResetView = () => {
+    setPosition({ x: 50, y: 50 });
+    setZoomLevel(1);
+  };
+
+  return (
+    <>
+      <canvas
+        ref={canvasRef}
+        width={500}
+        height={500}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        style={{ border: "1px solid black" }}
+      />
+      <div className="mt-2">
+        <button onClick={handleZoomIn} className="mr-2">
+          Zoom In
+        </button>
+        <button onClick={handleZoomOut} className="mr-2">
+          Zoom Out
+        </button>
+        <button onClick={handleResetView}>Reset View</button>
+      </div>
+    </>
+  );
+}

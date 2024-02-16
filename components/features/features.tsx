@@ -14,9 +14,16 @@ import {
   SystemProps,
   UnorderedList,
   ListItem,
+  Button,
+  Center,
 } from "@chakra-ui/react";
+import { FiBox } from "react-icons/fi";
 
 import { Section, SectionTitle, SectionTitleProps } from "components/section";
+import { useData } from "context/DataContext";
+import { useSearchStore } from "data/store";
+import Link from "next/link";
+// import Button from "theme/components/button";
 
 const Revealer = ({ children }: any) => {
   return children;
@@ -27,7 +34,6 @@ export interface FeaturesProps
     ThemingProps<"Features"> {
   title?: React.ReactNode;
   description?: React.ReactNode;
-  features: Array<FeatureProps>;
   columns?: ResponsiveValue<number>;
   spacing?: string | number;
   aside?: React.ReactChild;
@@ -37,31 +43,43 @@ export interface FeaturesProps
 }
 
 export interface FeatureProps {
-  title?: React.ReactNode;
-  description?: React.ReactNode;
-  icon?: any;
-  iconPosition?: "left" | "top";
-  iconSize?: SystemProps["boxSize"];
-  ip?: "left" | "top";
-  variant?: string;
-  delay?: number;
-  listItems: string[];
+  description: string;
+  id: string;
+  name: string;
+  maxUsers: number;
+  price: number;
+  productFeatures: Array<{
+    id: number;
+    name: string;
+  }>;
+  plans?: Array<{
+    createdAt: string;
+    description: string;
+    duration: number;
+    name: string;
+    price: number;
+    trialPeriodDays: number;
+  }>;
+  iconSize: number;
+  ip: string;
+  variant: string;
 }
 
 export const Feature: React.FC<FeatureProps> = (props) => {
   const {
-    title,
     description,
-    icon,
-    iconPosition,
-    iconSize = 8,
+    maxUsers,
+    productFeatures,
+    price,
+    name,
+    id,
     ip,
+    iconSize,
     variant,
-    listItems,
   } = props;
   const styles = useMultiStyleConfig("Feature", { variant });
 
-  const pos = iconPosition || ip;
+  const pos = ip;
   const direction = pos === "left" ? "row" : "column";
 
   return (
@@ -79,24 +97,26 @@ export const Feature: React.FC<FeatureProps> = (props) => {
         transition: "all 0.25s",
       }}
     >
-      {icon && (
-        <Circle sx={styles.icon}>
-          <Icon as={icon} boxSize={iconSize} />
-        </Circle>
-      )}
-      <Box>
-        <Stack direction="column" spacing={2}>
-          <Heading sx={styles.title}>{title}</Heading>
-          <Text sx={styles.description}>{description}</Text>
-          {listItems && (
-            <UnorderedList mt={2} fontSize="sm" fontWeight="normal">
-              {listItems.map((item, index) => (
-                <ListItem key={index}>{item}</ListItem>
-              ))}
-            </UnorderedList>
-          )}
-        </Stack>
-      </Box>
+      {/* {icon && ( */}
+      <Circle sx={styles.icon}>
+        <Icon as={FiBox} boxSize={iconSize} />
+      </Circle>
+      {/* )} */}
+      <Link href={`/product/${id}`}>
+        <Box>
+          <Stack direction="column" spacing={2}>
+            <Heading sx={styles.title}>{name}</Heading>
+            <Text sx={styles.description}>{description}</Text>
+            {productFeatures && (
+              <UnorderedList mt={2} fontSize="sm" fontWeight="normal">
+                {productFeatures.map((item) => (
+                  <ListItem key={item.id}>{item.name}</ListItem>
+                ))}
+              </UnorderedList>
+            )}
+          </Stack>
+        </Box>
+      </Link>
     </Stack>
   );
 };
@@ -105,7 +125,7 @@ export const Features: React.FC<FeaturesProps> = (props) => {
   const {
     title,
     description,
-    features,
+    // features,
     columns = [1, 2, 3],
     spacing = 8,
     align: alignProp = "center",
@@ -114,16 +134,83 @@ export const Features: React.FC<FeaturesProps> = (props) => {
     reveal: Wrap = Revealer,
     ...rest
   } = props;
-
+  const {
+    productList,
+    productListLoading,
+    productListError,
+    refetchProductList,
+  } = useData();
+  const styles = useMultiStyleConfig("Feature");
+  const { searchedText, isSearched } = useSearchStore();
+  const [features, setFeatures] = React.useState<FeatureProps[]>([]);
+  // console.log("list of products--", features);
+  let itemsPerPage = 6;
   const align = !!aside ? "left" : alignProp;
 
   const ip = align === "left" ? "left" : "top";
+  const [currentPage, setCurrentPage] = React.useState(1);
+
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(features.length / itemsPerPage);
+
+  // Calculate the index range for the current page
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  // Get features for the current page
+  const currentFeatures = features.slice(startIndex, endIndex);
+  const [loading, setLoading] = React.useState(false);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+  React.useEffect(() => {
+    if (searchedText && !productListLoading && !loading) {
+      const section = document.getElementById("features");
+      if (section && !loading) {
+        window.scrollTo({
+          top: section.getBoundingClientRect().top - 50,
+          behavior: "smooth",
+        });
+      }
+    }
+    if (productList) {
+      setFeatures(productList.searchProducts);
+    }
+  }, [productList, searchedText, productListLoading, loading]);
+  const refetchData = async () => {
+    try {
+      setLoading(true);
+      await refetchProductList({ query: searchedText || "*" });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+    // console.log("new Data", refetch);
+  };
+  React.useEffect(() => {
+    refetchData();
+  }, [searchedText]);
+  // console.log("loading------is it", productListLoading, loading);
+  if (productListLoading || loading)
+    return (
+      <Center>
+        <Text sx={styles.description}>Loading...</Text>
+      </Center>
+    );
+  if (productListError)
+    return (
+      <Center>
+        <Text sx={styles.description}>Error</Text>
+      </Center>
+    );
 
   return (
-    <Section {...rest}>
+    <Section {...rest} id="features" pt={10}>
       <Stack direction="row" height="full" align="flex-start">
         <VStack flex="1" spacing={[4, null, 8]} alignItems="stretch">
-          {(title || description) && (
+          {(title || description) && !isSearched && (
             <Wrap>
               <SectionTitle
                 title={title}
@@ -132,11 +219,44 @@ export const Features: React.FC<FeaturesProps> = (props) => {
               />
             </Wrap>
           )}
-          {features.map((feature, i) => (
-            <Wrap key={i} delay={feature.delay}>
-              <Feature iconSize={iconSize} {...feature} ip={ip} />
-            </Wrap>
-          ))}
+          {currentFeatures.length ? (
+            currentFeatures.map((feature, i) => (
+              <Wrap key={i} delay={i * 1}>
+                <Feature
+                  // iconSize={iconSize}
+                  {...feature}
+                  ip={ip}
+                  variant="inline"
+                />
+              </Wrap>
+            ))
+          ) : productListLoading || loading ? (
+            <Text>Loading...</Text>
+          ) : (
+            <Text>No result found</Text>
+          )}
+          {totalPages > 1 && (
+            <Stack direction="row" spacing={2} mt={4} justify="center">
+              {[...Array(totalPages)].map((_, i) => (
+                <Button
+                  key={i}
+                  variant={i + 1 === currentPage ? "solid" : "outline"}
+                  onClick={() => {
+                    handlePageChange(i + 1);
+                    const section = document.getElementById("features");
+                    if (section) {
+                      section.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }
+                  }}
+                >
+                  {i + 1}
+                </Button>
+              ))}
+            </Stack>
+          )}
         </VStack>
         {aside && (
           <Box flex="1" p="8">

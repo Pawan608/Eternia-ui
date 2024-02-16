@@ -1,0 +1,1 @@
+{"version":3,"file":"success.d.ts","sourceRoot":"","sources":["../../src/components/success.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAK,KAAK,MAAM,OAAO,CAAA;AAU9B,MAAM,WAAW,oBAAoB;IACnC,KAAK,EAAE,KAAK,CAAC,SAAS,CAAA;IACtB,WAAW,EAAE,KAAK,CAAC,SAAS,CAAA;CAC7B;AAED,eAAO,MAAM,eAAe,EAAE,KAAK,CAAC,EAAE,CAAC,oBAAoB,CAsB1D,CAAA"}
