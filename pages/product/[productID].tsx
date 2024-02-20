@@ -28,11 +28,13 @@ import React from "react";
 import { Card, CardAction, CardBody } from "@saas-ui/react";
 import { Pricing } from "components/pricing/pricing";
 import pricing from "data/pricing";
+import { Layout } from "components/layout";
+import { NextPageWithLayout } from "pages/_app";
 const Revealer = ({ children }: any) => {
   return children;
 };
 
-const Page: NextPage = ({}: any) => {
+const Page: NextPageWithLayout = ({}: any) => {
   const router = useRouter();
   const productID = router.query.productID;
   const styles = useMultiStyleConfig("Feature");
@@ -114,6 +116,19 @@ const Page: NextPage = ({}: any) => {
         </Section>
       </Section>
     </>
+  );
+};
+
+Page.getLayout = function getLayout(page: React.ReactElement) {
+  const { announcement, header, footer } = page.props;
+  return (
+    <Layout
+      announcementProps={announcement}
+      headerProps={header}
+      footerProps={footer}
+    >
+      {page}
+    </Layout>
   );
 };
 

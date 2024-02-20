@@ -23,6 +23,7 @@ import { Section, SectionTitle, SectionTitleProps } from "components/section";
 import { useData } from "context/DataContext";
 import { useSearchStore } from "data/store";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 // import Button from "theme/components/button";
 
 const Revealer = ({ children }: any) => {
@@ -222,12 +223,18 @@ export const Features: React.FC<FeaturesProps> = (props) => {
           {currentFeatures.length ? (
             currentFeatures.map((feature, i) => (
               <Wrap key={i} delay={i * 1}>
-                <Feature
-                  // iconSize={iconSize}
-                  {...feature}
-                  ip={ip}
-                  variant="inline"
-                />
+                <motion.div
+                  initial={{ x: "100%", opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                >
+                  <Feature
+                    // iconSize={iconSize}
+                    {...feature}
+                    ip={ip}
+                    variant="inline"
+                  />
+                </motion.div>
               </Wrap>
             ))
           ) : productListLoading || loading ? (

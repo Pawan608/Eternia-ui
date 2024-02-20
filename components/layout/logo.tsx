@@ -24,8 +24,7 @@ export const Logo = ({ href = "/", onClick }: LogoProps) => {
   return (
     <Flex h="8" flexShrink="0" alignItems="flex-start">
       <Link href={"/"} display="flex" p="1" borderRadius="sm" onClick={onClick}>
-        {/* {logo} */}
-        Eternia Windows
+        {logo}
         <VisuallyHidden>{siteConfig.seo?.title}</VisuallyHidden>
       </Link>
     </Flex>

@@ -4,13 +4,21 @@ import { Subscription } from "./../context/SubsContext";
 interface searchStore {
   searchedText: string;
   isSearched: boolean;
+  searchQuery: string;
+  showMic: boolean;
   setSearchedText: (text: string) => void;
+  setSearchQuery: (text: string) => void;
+  setShowMic: (text: boolean) => void;
 }
 export const useSearchStore = create<searchStore>((set) => ({
   searchedText: "",
+  searchQuery: "",
   isSearched: false,
+  showMic: false,
   setSearchedText: (text) =>
-    set(() => ({ searchedText: text, isSearched: true })),
+    set((state) => ({ ...state, searchedText: text, isSearched: true })),
+  setSearchQuery: (text) => set((state) => ({ ...state, searchQuery: text })),
+  setShowMic: (text) => set((state) => ({ ...state, showMic: text })),
 }));
 
 interface SubscriptionStoreState {

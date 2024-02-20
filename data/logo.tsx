@@ -12,7 +12,7 @@ export const Logo: React.FC<HTMLChakraProps<"svg">> = (props) => {
   return (
     <chakra.svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 550 172"
+      viewBox="0 0 700 172"
       {...props}
     >
       <path
@@ -63,6 +63,19 @@ export const Logo: React.FC<HTMLChakraProps<"svg">> = (props) => {
         <tspan x="370">i</tspan>
         <tspan x="400" font-weight="normal">
           a
+        </tspan>
+
+        <tspan x="480" font-weight="normal">
+          S
+        </tspan>
+        <tspan x="545" font-weight="normal">
+          o
+        </tspan>
+        <tspan x="600" font-weight="normal">
+          f
+        </tspan>
+        <tspan x="640" font-weight="normal">
+          t
         </tspan>
         <tspan x="170"> </tspan>
         {/* <tspan x="180" font-weight="normal">

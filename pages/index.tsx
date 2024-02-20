@@ -66,22 +66,31 @@ import { useSearchStore } from "data/store";
 import { NextPageWithLayout } from "./_app";
 // import { useData } from "context/DataContext";
 import { Layout } from "components/layout";
+import MicComponent from "components/announcement-banner/MicComponent";
+import { motion, AnimatePresence } from "framer-motion";
 const Home: NextPageWithLayout = () => {
+  const { showMic } = useSearchStore();
   return (
     <Box>
       <SEO title="Eternia Windows" description="Eternia Windows" />
       <Box>
-        <HeroSection />
+        {showMic ? (
+          <MicComponent />
+        ) : (
+          <>
+            <HeroSection />
 
-        {/* <HighlightsSection /> */}
+            {/* <HighlightsSection /> */}
 
-        <FeaturesSection />
+            <FeaturesSection />
 
-        <TestimonialsSection />
+            <TestimonialsSection />
 
-        {/* <PricingSection /> */}
+            {/* <PricingSection /> */}
 
-        {/* <FaqSection /> */}
+            {/* <FaqSection /> */}
+          </>
+        )}
       </Box>
     </Box>
   );
@@ -104,75 +113,102 @@ const HeroSection: React.FC = () => {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const { isSearched } = useSearchStore();
+  const variants = {
+    hidden: { opacity: 0, x: 20, transition: { duration: 2 } },
+    visible: { opacity: 1, y: 0, transition: { duration: 2 } },
+  };
   return (
     <Box position="relative" overflow="hidden">
-      <BackgroundGradient height="100%" />
-      <Container maxW="container.xl" pt={{ base: 40, lg: 60 }} pb="10">
-        <Stack direction={{ base: "column", lg: "row" }} alignItems="center">
-          {isSearched ? (
-            ""
-          ) : (
-            <>
-              <Hero
-                id="home"
-                justifyContent="flex-start"
-                px="0"
-                title={
-                  <FallInPlace>
-                    Build Your Company
-                    <Br /> With Futuristic Softwares
-                  </FallInPlace>
-                }
-                description={
-                  <FallInPlace delay={0.4} fontWeight="medium">
-                    Eternia Windows <Em>Provides various Products</Em>
-                    <Br /> for efficient management of <Br /> your company
-                  </FallInPlace>
-                }
+      <AnimatePresence>
+        {isSearched ? (
+          <>
+            {" "}
+            <BackgroundGradient height="100%" />
+            <Container maxW="container.xl" pt={{ base: 40, lg: 60 }} pb="10">
+              <Stack
+                direction={{ base: "column", lg: "row" }}
+                alignItems="center"
+              ></Stack>
+            </Container>
+          </>
+        ) : (
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={variants}
+            key="hero-section"
+          >
+            <BackgroundGradient height="100%" />
+            <Container maxW="container.xl" pt={{ base: 40, lg: 60 }} pb="10">
+              <Stack
+                direction={{ base: "column", lg: "row" }}
+                alignItems="center"
               >
-                <FallInPlace delay={0.8}>
-                  <ButtonGroup spacing={4} alignItems="center" mt={2}>
-                    <ButtonLink
-                      colorScheme="primary"
-                      size="lg"
-                      href={isAuthenticated ? "#features" : "/signup"}
-                      onClick={() => {
-                        router.push(isAuthenticated ? "#features" : "/signup");
-                      }}
-                    >
-                      {isAuthenticated ? "View Features" : "Sign Up"}
-                    </ButtonLink>
-                  </ButtonGroup>
-                </FallInPlace>
-              </Hero>
+                <Hero
+                  id="home"
+                  justifyContent="flex-start"
+                  px="0"
+                  title={
+                    <FallInPlace>
+                      Build Your Company
+                      <Br /> With Futuristic Softwares
+                    </FallInPlace>
+                  }
+                  description={
+                    <FallInPlace delay={0.4} fontWeight="medium">
+                      Eternia Windows <Em>Provides various Products</Em>
+                      <Br /> for efficient management of <Br /> your company
+                    </FallInPlace>
+                  }
+                >
+                  <FallInPlace delay={0.8}>
+                    <ButtonGroup spacing={4} alignItems="center" mt={2}>
+                      <ButtonLink
+                        colorScheme="primary"
+                        size="lg"
+                        href={isAuthenticated ? "#features" : "/signup"}
+                        onClick={() => {
+                          router.push(
+                            isAuthenticated ? "#features" : "/signup"
+                          );
+                        }}
+                      >
+                        {isAuthenticated ? "View Features" : "Sign Up"}
+                      </ButtonLink>
+                    </ButtonGroup>
+                  </FallInPlace>
+                </Hero>
 
-              <Box
-                height="600px"
-                position="absolute"
-                display={{ base: "none", lg: "block" }}
-                left={{ lg: "60%", xl: "55%" }}
-                width="80vw"
-                maxW="1100px"
-                margin="0 auto"
-              >
-                <FallInPlace delay={1}>
-                  <Box overflow="hidden" height="100%">
-                    <Image
-                      src="/static/screenshots/list.png"
-                      layout="fixed"
-                      width={1200}
-                      height={762}
-                      alt="Screenshot of a ListPage in Saas UI Pro"
-                      quality="75"
-                      priority
-                    />
-                  </Box>
-                </FallInPlace>
-              </Box>
-            </>
-          )}
-        </Stack>
-      </Container>
+                <Box
+                  height="600px"
+                  position="absolute"
+                  display={{ base: "none", lg: "block" }}
+                  left={{ lg: "60%", xl: "55%" }}
+                  width="80vw"
+                  maxW="1100px"
+                  margin="0 auto"
+                >
+                  <FallInPlace delay={1}>
+                    <Box overflow="hidden" height="100%">
+                      <Image
+                        src="/static/screenshots/list.png"
+                        layout="fixed"
+                        width={1200}
+                        height={762}
+                        alt="Screenshot of a ListPage in Saas UI Pro"
+                        quality="75"
+                        priority
+                      />
+                    </Box>
+                  </FallInPlace>
+                </Box>
+              </Stack>
+            </Container>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* 
       <Features
         id="benefits"
