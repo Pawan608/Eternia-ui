@@ -5,16 +5,18 @@ import DropdownNotification from "./DropdownNotification";
 import DropdownMessage from "./DropdownMessage";
 import DropdownUser from "./DropdownUser";
 import { useQuery } from "@apollo/client";
-import { GET_USER_PROFILE_QUERY } from "@/graphql/query";
-import { useAuth } from "@/app/context/AuthContext";
+// import { GET_USER_PROFILE_QUERY } from "@/graphql/query";
+import { GET_USER_PROFILE_QUERY } from "graphql/query";
+import { useAuth } from "context/AuthProvider";
+// import { useAuth } from "@/app/context/AuthContext";
 
 const HomeHeader = (props: {
   sidebarOpen: string | boolean | undefined;
   setSidebarOpen: (arg0: boolean) => void;
 }) => {
-  const { userData, userLoading, userError } = useAuth();
-console.log("userdata",userData);
-  if (userError) return <>{userError.message}</>;
+  const { userData } = useAuth();
+  // console.log("userdata", userData);
+  // if (userError) return <>{userError.message}</>;
 
   return (
     <header className="sticky top-0 flex w-full bg-white drop-shadow-1 dark:bg-boxdark z-999 dark:drop-shadow-none">

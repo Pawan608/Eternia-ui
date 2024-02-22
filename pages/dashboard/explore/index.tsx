@@ -1,14 +1,21 @@
 "use client";
-import { useAuth } from "@/app/context/AuthContext";
-import { useSubs } from "@/app/context/SubsContext";
-import Feedback from "@/components/home/dashboard/Feedback";
-import ProductPurchaseModal from "@/components/home/explore/ProductPurchaseModal";
-import { GET_PLANS_QUERY, GET_USER_SUB_DATA } from "@/graphql/query";
-import useFormattedDate from "@/hooks/useFormattedDate";
+// import { useAuth } from "@/app/context/AuthContext";
+import { useAuth } from "context/AuthProvider";
+import { useSubs } from "context/SubsContext";
+import Feedback from "components/ComponentsConsole/home/dashboard/Feedback";
+// import Feedback from "@/components/home/dashboard/Feedback";
+import ProductPurchaseModal from "components/ComponentsConsole/home/explore/ProductPurchaseModal";
+import { GET_PLANS_QUERY, GET_USER_SUB_DATA } from "graphql/query";
+// import useFormattedDate
+// import ProductPurchaseModal from "@/components/home/explore/ProductPurchaseModal";
+// import { GET_PLANS_QUERY, GET_USER_SUB_DATA } from "@/graphql/query";
+// import useFormattedDate from "@/hooks/useFormattedDate";
 import { gql, useQuery } from "@apollo/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { NextPageWithLayout } from "pages/_app";
+import RootLayout from "components/ComponentsConsole/Layout/layout";
 
 const Modal = ({ item, onClose }) => (
   <div className="fixed inset-0 z-50 flex overflow-auto bg-smoke-light">
@@ -21,7 +28,7 @@ const Modal = ({ item, onClose }) => (
     </div>
   </div>
 );
-export default function Explore() {
+const Explore: NextPageWithLayout = () => {
   const { loading, error, data } = useQuery(GET_PLANS_QUERY);
   const { subsData, subsError, subsLoading } = useSubs();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,7 +53,8 @@ export default function Explore() {
   const plansWithSubInfo = planData?.map((plan) => {
     // Find the active subscription for this package, if any
     const activeSubscription = userSubscriptions.find(
-      (sub) => sub?.plan?.id === plan?.id && sub.status?.toLowerCase() == "active", // Assuming there's an `isActive` field to indicate active subscription
+      (sub) =>
+        sub?.plan?.id === plan?.id && sub.status?.toLowerCase() == "active" // Assuming there's an `isActive` field to indicate active subscription
     );
 
     // Check if there's an active subscription and extract the active date
@@ -55,8 +63,12 @@ export default function Explore() {
       ? activeSubscription.startDate
       : null; // Assuming `activeDate` field exists
 
-      const date = new Date(activeDateISO);
-    const activeDate = date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    const date = new Date(activeDateISO);
+    const activeDate = date.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
 
     // Return a new object with all properties of the package, plus the 'hasActiveSubscription' and 'activeDate' if applicable
     return { ...plan, hasActiveSubscription, activeDate };
@@ -125,48 +137,11 @@ export default function Explore() {
       </div>
     </main>
   );
-}
+};
 
-{
-  /* <div className="relative flex items-start justify-between">
-<div className="flex-1">
-  <div className="absolute right-0 -top-5">
-    {item.hasActiveSubscription && (
-      <span className=" rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-200 dark:text-green-900">
-        Active
-      </span>
-    )}
-  </div>
-  <h3 className="mb-4 font-bold text-black text-title-lg dark:text-white">
-    {item.name}
-  </h3>
-  <p className="font-medium">
-    Empower Your Sales with Smart CRM Solutions
-  </p>
-  {!item.hasActiveSubscription ? (
-    <span className="flex items-center gap-2 mt-2">
-      <span className="text-sm font-medium">Starting from</span>
-      <span className="flex items-center gap-1 p-1 text-xs font-medium text-white rounded-md bg-meta-7">
-        <span>$12/user/month</span>
-      </span>
-    </span>
-  ) : (
-    <span className="flex items-center gap-2 mt-2">
-      <span className="text-sm font-medium">Active since</span>
-      <span className="flex items-center gap-1 p-1 text-xs font-medium text-white rounded-md bg-meta-3">
-        <span>{item.activeDate}</span>
-      </span>
-    </span>
-  )}
-</div>
-<div>
-  <Image
-    width={64}
-    height={64}
-    alt="zohologo"
-    src={"/images/brand/zohologo.webp"}
-  />
-</div>
-</div>
-</div> */
-}
+Explore.getLayout = function getLayout(page: React.ReactElement) {
+  // const { announcement, header, footer } = page.props;
+  return <RootLayout>{page}</RootLayout>;
+};
+
+export default Explore;

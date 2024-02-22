@@ -4,6 +4,8 @@ import { GET_USER_SUB_REQUESTS_QUERY } from "graphql/query";
 import { useQuery } from "@apollo/client";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
+import { NextPageWithLayout } from "pages/_app";
+import RootLayout from "components/ComponentsConsole/Layout/layout";
 interface Approval {
   id: string;
   approved: boolean;
@@ -39,7 +41,7 @@ interface RequestType {
 interface GetRequestsByUserResponse {
   getRequestsByUser: Request[];
 }
-export default function RequestsPage() {
+const RequestsPage: NextPageWithLayout = () => {
   const [expandedRow, setExpandedRow] = useState(null);
   const { userId } = useAuth();
   const {
@@ -150,7 +152,7 @@ export default function RequestsPage() {
       </div>
     </main>
   );
-}
+};
 interface DashboardCardProp {
   title: string;
   status: boolean | string;
@@ -244,3 +246,10 @@ const DashboardCard: React.FC<DashboardCardProp> = ({
     </div>
   );
 };
+
+RequestsPage.getLayout = function getLayout(page: React.ReactElement) {
+  // const { announcement, header, footer } = page.props;
+  return <RootLayout>{page}</RootLayout>;
+};
+
+export default RequestsPage;

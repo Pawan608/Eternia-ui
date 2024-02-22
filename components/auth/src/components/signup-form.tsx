@@ -21,6 +21,8 @@ import { useMutation } from "@apollo/client";
 import { CREATE_USER } from "graphql/mutation";
 import { useRouter } from "next/router";
 import { useAuth } from "context/AuthProvider";
+import { AuthFormError } from "./error";
+import { Progress } from "@chakra-ui/react";
 
 interface SubmitParams {
   email: string;
@@ -66,8 +68,11 @@ export const SignupForm: React.FC<PasswordFormProps> = ({
   //   const [{ isLoading, isResolved, data }, submit] = useLogin({ action });
   const { setAuthToken, setUserId } = useAuth();
   const router = useRouter();
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [showSnackbar, setShowSnackbar] = React.useState({
+    status: "error",
+    message: "",
+    show: false,
+  });
   //   const [password, setPassword] = React.useState("");
   //   const data = { email: "", password: "" };
   //   React.useEffect(() => {
@@ -79,14 +84,12 @@ export const SignupForm: React.FC<PasswordFormProps> = ({
   const [signin, { loading, error }] = useMutation(CREATE_USER, {
     variables: {
       createUserInput: {
-        email: email,
-        password: password,
+        email: null,
+        password: null,
         firstName: "*",
         lastName: "*",
-        username: email,
-        selectedRoles: [
-          email.endsWith("@adityabirla.com") ? "Internal" : "User",
-        ],
+        username: null,
+        selectedRoles: null,
       },
     },
     onCompleted: (data) => {
@@ -94,6 +97,11 @@ export const SignupForm: React.FC<PasswordFormProps> = ({
       setTimeout(() => {
         router.push("/login");
       }, 1000);
+      setShowSnackbar({
+        show: true,
+        message: "Successfully logged in",
+        status: "success",
+      });
       return renderSuccess();
       //   }
 
@@ -103,6 +111,11 @@ export const SignupForm: React.FC<PasswordFormProps> = ({
       // Handle the error, e.g., show an error message
       //   console.log("errr", data, email, password);
       console.error("signup error:", error.message);
+      setShowSnackbar({
+        show: true,
+        message: error.message,
+        status: "error",
+      });
       return renderError(error.message);
     },
   });
@@ -110,19 +123,43 @@ export const SignupForm: React.FC<PasswordFormProps> = ({
     // console.log(params.email!==params.);
     // console.log();
     if (params.password != params.confirmpassword) {
-      console.log("hello");
+      // console.log("hello");
       return renderError("password and confirm password did not match");
     }
     // console.log(email, password);
-    setEmail(params.email);
-    setPassword(params.password);
-    return signin();
+    // setEmail(params.email);
+    // setPassword(params.password);
+    return signin({
+      variables: {
+        createUserInput: {
+          email: params.email,
+          password: params.password,
+          firstName: "*",
+          lastName: "*",
+          username: params.email,
+          selectedRoles: [
+            params.email.toLowerCase().endsWith("@adityabirla.com")
+              ? "Internal"
+              : "User",
+          ],
+        },
+      },
+    });
   };
 
   // Show a default success message on signup.
   //   if (isResolved && action === "signUp") {
   //     return renderSuccess(data);
   //   }
+  if (showSnackbar.show && showSnackbar.status == "success")
+    return (
+      <>
+        <AuthFormSuccess
+          title="Success!"
+          description=" Successfully Signed In"
+        />
+      </>
+    );
 
   return (
     <>
@@ -132,6 +169,12 @@ export const SignupForm: React.FC<PasswordFormProps> = ({
         // defaultValues={{ email: "", password: "", ...defaultValues }}
         {...formProps}
       >
+        {loading ? <Progress size="xs" isIndeterminate /> : ""}
+        {showSnackbar.show && showSnackbar.status == "error" ? (
+          <AuthFormError title="Error!" description={showSnackbar.message} />
+        ) : (
+          ""
+        )}
         <FormLayout>
           <Field
             name="email"

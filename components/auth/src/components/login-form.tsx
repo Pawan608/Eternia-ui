@@ -22,6 +22,7 @@ import { useAuth } from "context/AuthProvider";
 import { LOGIN_MUTATION } from "graphql/mutation";
 import { useMutation } from "@apollo/client";
 import { AuthFormError } from "./error";
+import { Progress } from "@chakra-ui/react";
 
 interface SubmitParams {
   email: string;
@@ -65,8 +66,11 @@ export const LoginForm: React.FC<PasswordFormProps> = ({
 
   const { setAuthToken, setUserId } = useAuth();
   const router = useRouter();
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [showSnackbar, setShowSnackbar] = React.useState({
+    status: "error",
+    message: "",
+    show: false,
+  });
   //   const data = { email: "", password: "" };
   //   React.useEffect(() => {
   //     if (isAuthenticated) {
@@ -77,8 +81,8 @@ export const LoginForm: React.FC<PasswordFormProps> = ({
   const [login, { loading, error }] = useMutation(LOGIN_MUTATION, {
     variables: {
       loginInput: {
-        email: email,
-        password: password,
+        email: null,
+        password: null,
       },
     },
     onCompleted: (data) => {
@@ -89,7 +93,11 @@ export const LoginForm: React.FC<PasswordFormProps> = ({
       setTimeout(() => {
         router.push("/");
       }, 2000);
-      return renderSuccess();
+      setShowSnackbar({
+        show: true,
+        message: "Successfully logged in",
+        status: "success",
+      });
 
       // You might want to redirect the user or update the UI in some way
     },
@@ -97,23 +105,46 @@ export const LoginForm: React.FC<PasswordFormProps> = ({
       // Handle the error, e.g., show an error message
       //   console.log("errr", data, email, password);
       console.error("Login error:", error.message);
+      setShowSnackbar({
+        show: true,
+        message: error.message,
+        status: "error",
+      });
       return renderError(error.message);
     },
   });
   const handleSubmit: SubmitHandler<SubmitParams> = (params) => {
-    // console.log(params.email);
-    console.log(email, password);
-    setEmail(params.email);
-    setPassword(params.password);
-    return login();
+    return login({
+      variables: {
+        loginInput: {
+          email: params.email,
+          password: params.password,
+        },
+      },
+    });
   };
 
+  if (showSnackbar.show && showSnackbar.status == "success")
+    return (
+      <>
+        <AuthFormSuccess
+          title="Success!"
+          description="Logged In Successfully"
+        />
+      </>
+    );
   return (
     <Form<SubmitParams>
       onSubmit={handleSubmit}
       defaultValues={{ email: "" }}
       {...formProps}
     >
+      {loading ? <Progress size="xs" isIndeterminate /> : ""}
+      {showSnackbar.show && showSnackbar.status == "error" ? (
+        <AuthFormError title="Error!" description={showSnackbar.message} />
+      ) : (
+        ""
+      )}
       <FormLayout>
         <Field
           name="email"

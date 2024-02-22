@@ -59,6 +59,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { AuthProvider } from "context/AuthProvider";
 import type { ReactElement, ReactNode } from "react";
 import type { NextPage } from "next";
+import "./global.css";
 // import { DataProvider } from "context/DataContext";
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;

@@ -182,6 +182,7 @@ export const Features: React.FC<FeaturesProps> = (props) => {
   const refetchData = async () => {
     try {
       setLoading(true);
+      console.log("Searched text", searchedText);
       await refetchProductList({ query: searchedText || "*" });
     } catch (err) {
       console.log(err);

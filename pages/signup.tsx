@@ -10,6 +10,8 @@ import siteConfig from "data/config";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { PageTransition } from "components/motion/page-transition";
 import { SignupForm } from "components/auth/src/components/signup-form";
+import { Layout } from "components/layout";
+import { NextPageWithLayout } from "./_app";
 
 const providers = {
   google: {
@@ -23,7 +25,7 @@ const providers = {
   },
 };
 
-const Login: NextPage = () => {
+const Login: NextPageWithLayout = () => {
   const onSuccess = () => {};
   return (
     <Section height="calc(100vh - 100px)" innerWidth="container.sm">
@@ -49,6 +51,19 @@ const Login: NextPage = () => {
         </PageTransition>
       </Center>
     </Section>
+  );
+};
+
+Login.getLayout = function getLayout(page: React.ReactElement) {
+  const { announcement, header, footer } = page.props;
+  return (
+    <Layout
+      announcementProps={announcement}
+      headerProps={header}
+      footerProps={footer}
+    >
+      {page}
+    </Layout>
   );
 };
 

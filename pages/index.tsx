@@ -114,7 +114,7 @@ const HeroSection: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const { isSearched } = useSearchStore();
   const variants = {
-    hidden: { opacity: 0, x: 20, transition: { duration: 2 } },
+    hidden: { opacity: 0, x: 0, transition: { duration: 2 } },
     visible: { opacity: 1, y: 0, transition: { duration: 2 } },
   };
   return (

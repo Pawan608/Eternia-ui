@@ -59,7 +59,26 @@ const Navigation: React.FC = () => {
             />
           );
         })}
-
+      {isAuthenticated
+        ? siteConfig.header.authenticatedLinks.map(
+            ({ href, id, ...props }, i) => {
+              return (
+                <NavLink
+                  display={["none", null, "block"]}
+                  href={href || `/${id}`}
+                  key={i}
+                  isActive={
+                    !!(
+                      (id && activeId === id) ||
+                      (href && !!router.asPath.match(new RegExp(href)))
+                    )
+                  }
+                  {...props}
+                />
+              );
+            }
+          )
+        : ""}
       <ThemeToggle />
 
       <MobileNavButton

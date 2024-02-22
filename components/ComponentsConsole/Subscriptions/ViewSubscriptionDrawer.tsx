@@ -1,5 +1,6 @@
 "use client";
-import useSubscriptionStore from "@/store/globalStore";
+// import useSubscriptionStore from "@/store/globalStore";
+import useSubscriptionStore from "data/store";
 import React, { useState } from "react";
 
 const ViewSubscriptionDrawer = () => {
@@ -32,7 +33,7 @@ const ViewSubscriptionDrawer = () => {
                     minute: "2-digit",
                     second: "2-digit",
                     hour12: true, // or false for 24-hour format
-                  },
+                  }
                 )
               : "No Start Date"}
           </p>
@@ -41,18 +42,15 @@ const ViewSubscriptionDrawer = () => {
           <h3 className="text-md dark:text-gray-400">End Date</h3>
           <p className="dark:text-gray-300">
             {selectedSubscription?.endDate
-              ? new Date(selectedSubscription.endDate).toLocaleString(
-                  "en-US",
-                  {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                    hour12: true, // or false for 24-hour format
-                  },
-                )
+              ? new Date(selectedSubscription.endDate).toLocaleString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                  hour12: true, // or false for 24-hour format
+                })
               : "No End Date"}
           </p>
         </div>

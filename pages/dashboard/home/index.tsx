@@ -6,8 +6,10 @@ import { useQuery } from "@apollo/client";
 import Image from "next/image";
 import { LoaderIcon } from "react-hot-toast";
 import { NextPage } from "next";
+import RootLayout from "components/ComponentsConsole/Layout/layout";
+import { NextPageWithLayout } from "pages/_app";
 
-const Home: NextPage = () => {
+const Home: NextPageWithLayout = () => {
   const { userId } = useAuth();
   console.log("USER", userId);
   // const userId = "cc2b01c1-2549-4add-a5c8-d6f70146f77a";
@@ -66,6 +68,11 @@ const Home: NextPage = () => {
       )}
     </main>
   );
+};
+
+Home.getLayout = function getLayout(page: React.ReactElement) {
+  // const { announcement, header, footer } = page.props;
+  return <RootLayout>{page}</RootLayout>;
 };
 
 export default Home;

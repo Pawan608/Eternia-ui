@@ -1,6 +1,8 @@
 "use client";
-import ViewSubscriptionDrawer from "@/components/Subscriptions/ViewSubscriptionDrawer";
-import useSubscriptionStore from "@/store/globalStore";
+// import ViewSubscriptionDrawer from "@/components/Subscriptions/ViewSubscriptionDrawer";
+// import useSubscriptionStore from "@/store/globalStore";
+import useSubscriptionStore from "data/store";
+import ViewSubscriptionDrawer from "components/ComponentsConsole/Subscriptions/ViewSubscriptionDrawer";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 import { BsEyeFill, BsReceipt } from "react-icons/bs";
@@ -8,7 +10,7 @@ import { IoReloadOutline } from "react-icons/io5";
 
 const SubscriptionTable = ({ subscriptionsData }) => {
   const [showForm, setShowForm] = useState(false);
-  const {setSelectedSubscription} = useSubscriptionStore();
+  const { setSelectedSubscription } = useSubscriptionStore();
   const formVariants = {
     hidden: {
       width: 0,
@@ -66,7 +68,7 @@ const SubscriptionTable = ({ subscriptionsData }) => {
                           day: "2-digit",
                           month: "2-digit",
                           year: "2-digit",
-                        },
+                        }
                       )}
                     </p>
                   </td>
@@ -80,7 +82,7 @@ const SubscriptionTable = ({ subscriptionsData }) => {
                   <div className="flex items-center space-x-3.5">
                     <button
                       onClick={() => {
-                        setSelectedSubscription(subscription)
+                        setSelectedSubscription(subscription);
                         setShowForm(!showForm);
                       }}
                       className="hover:text-primary"

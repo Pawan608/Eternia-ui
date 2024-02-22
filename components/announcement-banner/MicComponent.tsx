@@ -67,7 +67,7 @@ function MicComponent() {
       console.log("end function");
       //   console.log("new mic...", transcript);
       if (transcript) {
-        setSearchedText(searchQuery);
+        setSearchedText(transcript);
         setShowMic(false);
       }
       // clearTimeout(timeout!);

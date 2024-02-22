@@ -32,7 +32,7 @@ interface AuthContextProps {
   setUserId: (userId: string, user: UserType) => void;
   userData: UserType | null; // Optional type for user data
   //   userLoading: boolean;
-  //   userError?: Error; // Optional type for error
+  // userError?: Error; // Optional type for error
 }
 
 export const AuthContext = createContext<AuthContextProps | undefined>(

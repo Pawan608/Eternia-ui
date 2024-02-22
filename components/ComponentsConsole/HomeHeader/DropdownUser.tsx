@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 
-import UserOne from "../images/user/user-01.png";
+// import UserOne from "../images/user/user-01.png";
 import Link from "next/link";
-import { useAuth } from "@/app/context/AuthContext";
+import { useAuth } from "context/AuthProvider";
+// import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
 
-const DropdownUser = ({user}) => {
+const DropdownUser = ({ user }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { clearAuthToken } = useAuth();
   const router = useRouter();
@@ -40,7 +41,7 @@ const DropdownUser = ({user}) => {
 
   const handleLogout = () => {
     clearAuthToken();
-    router.replace('/auth/signin')
+    router.replace("/auth/signin");
   };
   return (
     <div className="relative">
@@ -51,7 +52,7 @@ const DropdownUser = ({user}) => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            {user.firstName.toUpperCase()}
+            {user?.firstName?.toUpperCase()}
           </span>
           {/* <span className="block text-xs">UX Designer</span> */}
         </span>

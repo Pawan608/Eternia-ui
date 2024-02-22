@@ -37,6 +37,13 @@ const siteConfig = {
         variant: "primary",
       },
     ],
+    authenticatedLinks: [
+      {
+        id: "console",
+        label: "Console",
+        href: "/dashboard/home",
+      },
+    ],
   },
   footer: {
     copyright: (

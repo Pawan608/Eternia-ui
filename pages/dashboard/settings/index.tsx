@@ -5,8 +5,10 @@ import { GET_USER_PROFILE_QUERY } from "graphql/query";
 import { useQuery } from "@apollo/client";
 // import userThree from '../images/user/user-03.png';
 import { IoPersonOutline } from "react-icons/io5";
+import { NextPageWithLayout } from "pages/_app";
+import RootLayout from "components/ComponentsConsole/Layout/layout";
 
-const Settings = () => {
+const Settings: NextPageWithLayout = () => {
   const { userData } = useAuth();
 
   const user = userData;
@@ -260,6 +262,11 @@ const Settings = () => {
       </div>
     </>
   );
+};
+
+Settings.getLayout = function getLayout(page: React.ReactElement) {
+  // const { announcement, header, footer } = page.props;
+  return <RootLayout>{page}</RootLayout>;
 };
 
 export default Settings;

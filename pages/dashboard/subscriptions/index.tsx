@@ -1,10 +1,11 @@
 "use client";
-// import { useSubs } from "@/app/context/SubsContext";
 import { useSubs } from "context/SubsContext";
 import Breadcrumb from "components/ComponentsConsole/home/Breadcrumb";
 import SubscriptionTable from "components/ComponentsConsole/home/subscriptions/SubscriptionTable";
+import RootLayout from "components/ComponentsConsole/Layout/layout";
+import { NextPageWithLayout } from "pages/_app";
 
-export default function Subscription() {
+const Subscription: NextPageWithLayout = () => {
   const { subsData, subsError, subsLoading } = useSubs();
   if (subsLoading) return <p>Loading...</p>;
   if (subsError) return <p>Error :(</p>;
@@ -17,4 +18,10 @@ export default function Subscription() {
       </div>
     </>
   );
-}
+};
+Subscription.getLayout = function getLayout(page: React.ReactElement) {
+  // const { announcement, header, footer } = page.props;
+  return <RootLayout>{page}</RootLayout>;
+};
+
+export default Subscription;

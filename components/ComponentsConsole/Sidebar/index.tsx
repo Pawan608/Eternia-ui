@@ -9,6 +9,8 @@ import {
   BsDoorOpen,
   BsGearFill,
 } from "react-icons/bs";
+import { BiArrowBack } from "react-icons/bi";
+
 import { usePathname, useRouter } from "next/navigation";
 import { TbSmartHome } from "react-icons/tb";
 // import { useAuth } from "@/app/context/AuthContext";
@@ -124,7 +126,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             <ul className="mb-6 flex flex-col gap-1.5">
               <li>
                 <Link
-                  href="/home"
+                  href="/dashboard/home"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-graydark hover:text-bodydark1 dark:hover:bg-meta-4 ${
                     pathname.includes("home") &&
                     "bg-graydark text-bodydark1 dark:bg-meta-4"
@@ -137,7 +139,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
               <li>
                 <Link
-                  href="/explore"
+                  href="/dashboard/explore"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-graydark hover:text-bodydark1 dark:hover:bg-meta-4 ${
                     pathname.includes("explore") &&
                     "bg-graydark text-bodydark1 dark:bg-meta-4"
@@ -149,7 +151,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </li>
               <li>
                 <Link
-                  href="/subscriptions"
+                  href="/dashboard/subscriptions"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-graydark hover:text-bodydark1 dark:hover:bg-meta-4 ${
                     pathname.includes("subscriptions") &&
                     "bg-graydark text-bodydark1 dark:bg-meta-4"
@@ -161,7 +163,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </li>
               <li>
                 <Link
-                  href="/requests"
+                  href="/dashboard/requests"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-graydark hover:text-bodydark1 dark:hover:bg-meta-4 ${
                     pathname.includes("requests") &&
                     "bg-graydark text-bodydark1 dark:bg-meta-4"
@@ -173,7 +175,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </li>
               <li>
                 <Link
-                  href="/settings"
+                  href="/dashboard/settings"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-graydark hover:text-bodydark1 dark:hover:bg-meta-4 ${
                     pathname.includes("settings") &&
                     "bg-graydark text-bodydark1 dark:bg-meta-4"
@@ -183,6 +185,16 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   Settings
                 </Link>
               </li>
+
+              <li>
+                <Link
+                  href="/"
+                  className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-graydark hover:text-bodydark1 dark:hover:bg-meta-4`}
+                >
+                  <BiArrowBack />
+                  Back To Dashboard
+                </Link>
+              </li>
             </ul>
           </div>
           <div>
@@ -190,7 +202,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               onClick={() => {
                 clearAuthToken();
 
-                router.push("/auth/signin");
+                router.push("/login");
               }}
               className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-black duration-300 ease-in-out hover:bg-danger hover:text-bodydark1 dark:hover:bg-danger ${
                 pathname.includes("settings") &&

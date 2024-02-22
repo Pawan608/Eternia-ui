@@ -51,8 +51,13 @@ export const AnnouncementBanner: React.FC<AnnouncementBannerProps> = (
   const bg = useColorModeValue("white", "gray.900");
   // const [searchQuery, setSearchQuery] = useState("");
   const [isMicActive, setIsMicActive] = useState(false);
-  const { setSearchedText, setSearchQuery, searchQuery, setShowMic } =
-    useSearchStore();
+  const {
+    setSearchedText,
+    setSearchQuery,
+    searchQuery,
+    setShowMic,
+    searchedText,
+  } = useSearchStore();
   const inputRef = useRef<HTMLInputElement>(null);
   const lastInputTimeRef = useRef<number | null>(null); // Timestamp of last input event
   const [isOpen, setIsOpen] = useState(true);
@@ -164,7 +169,7 @@ export const AnnouncementBanner: React.FC<AnnouncementBannerProps> = (
                     border: "none",
                     boxShadow: "none",
                   }}
-                  value={searchQuery}
+                  value={searchedText}
                   // onInput={(e: React.FormEvent<HTMLInputElement>) => {
                   //   const target = e.target as HTMLInputElement;
                   //   setSearchQuery(target.value);
