@@ -90,16 +90,16 @@ function MicComponent() {
 
   const requestMicrophonePermission = () => {
     console.log("function called");
-    navigator.mediaDevices
-      .getUserMedia({ audio: true })
-      .then(() => {
-        console.log("Microphone access granted");
-        // Microphone access granted, retry speech recognition
-        handleSpeechRecognition();
-      })
-      .catch((error) => {
-        console.error("Error accessing microphone:", error);
-      });
+    // navigator.mediaDevices
+    //   .getUserMedia({ audio: true })
+    //   .then(() => {
+    //     console.log("Microphone access granted");
+    //     // Microphone access granted, retry speech recognition
+    //     handleSpeechRecognition();
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error accessing microphone:", error);
+    //   });
   };
   console.log("mic status", isMicActive);
   return (
