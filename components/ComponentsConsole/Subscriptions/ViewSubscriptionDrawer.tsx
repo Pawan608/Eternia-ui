@@ -23,7 +23,7 @@ const ViewSubscriptionDrawer = () => {
           <h3 className="text-md dark:text-gray-400">Start Date</h3>
           <p className="dark:text-gray-300">
             {selectedSubscription?.startDate
-              ? new Date(selectedSubscription.startDate).toLocaleString(
+              ? new Date(selectedSubscription?.startDate).toLocaleString(
                   "en-US",
                   {
                     year: "numeric",
@@ -42,7 +42,7 @@ const ViewSubscriptionDrawer = () => {
           <h3 className="text-md dark:text-gray-400">End Date</h3>
           <p className="dark:text-gray-300">
             {selectedSubscription?.endDate
-              ? new Date(selectedSubscription.endDate).toLocaleString("en-US", {
+              ? new Date(selectedSubscription?.endDate).toLocaleString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",

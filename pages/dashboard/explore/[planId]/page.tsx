@@ -8,6 +8,8 @@ import { GET_PLAN_QUERY } from "graphql/query";
 import { useMutation, useQuery } from "@apollo/client";
 import { useParams, useRouter } from "next/navigation";
 import React from "react";
+import { NextPageWithLayout } from "pages/_app";
+import RootLayout from "components/ComponentsConsole/Layout/layout";
 
 enum RequestType {
   NewSubscription = "NewSubscription",
@@ -19,7 +21,7 @@ type CreateRequestInput = {
   requestType: RequestType; // Assuming 'requestType' can only be 'NewSubscription'
   userId: string;
 };
-const ProductPage = () => {
+const ProductPage: NextPageWithLayout = () => {
   const router = useRouter();
   const params = useParams();
   const { userId } = useAuth();
@@ -129,6 +131,11 @@ const ProductPage = () => {
       )}
     </main>
   );
+};
+
+ProductPage.getLayout = function getLayout(page: React.ReactElement) {
+  // const { announcement, header, footer } = page.props;
+  return <RootLayout>{page}</RootLayout>;
 };
 
 export default ProductPage;
