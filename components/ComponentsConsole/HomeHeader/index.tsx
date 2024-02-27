@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import DarkModeSwitcher from "./DarkModeSwitcher";
+// import DarkModeSwitcher from "./DarkModeSwitcher";
 import DropdownNotification from "./DropdownNotification";
 import DropdownMessage from "./DropdownMessage";
 import DropdownUser from "./DropdownUser";

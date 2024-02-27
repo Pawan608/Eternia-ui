@@ -45,7 +45,7 @@ import {
 } from "react-icons/fi";
 import { Features } from "components/features";
 import { BackgroundGradient } from "components/gradients/background-gradient";
-import { Faq } from "components/faq";
+// import { Faq } from "components/faq";
 import { Pricing } from "components/pricing/pricing";
 
 import { ButtonLink } from "components/button-link/button-link";
@@ -685,9 +685,9 @@ const TestimonialsSection = () => {
 //   );
 // };
 
-const FaqSection = () => {
-  return <Faq {...faq} />;
-};
+// const FaqSection = () => {
+//   return <Faq {...faq} />;
+// };
 
 export default Home;
 

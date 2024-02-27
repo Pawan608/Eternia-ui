@@ -1,290 +1,292 @@
-import {
-  AuthParams,
-  AuthOptions,
-  AuthStateChangeCallback,
-  AuthProviderProps,
-} from '../'
+// import {
+//   AuthParams,
+//   AuthOptions,
+//   AuthStateChangeCallback,
+//   AuthProviderProps,
+// } from "../";
 
-import type {
-  AuthChangeEvent,
-  AuthResponse,
-  OAuthResponse,
-  Provider,
-  Session,
-  User,
-  SupabaseClient,
-  VerifyEmailOtpParams,
-  VerifyMobileOtpParams,
-} from '@supabase/supabase-js'
+// // import type {
+// //   AuthChangeEvent,
+// //   AuthResponse,
+// //   OAuthResponse,
+// //   Provider,
+// //   Session,
+// //   User,
+// //   SupabaseClient,
+// //   VerifyEmailOtpParams,
+// //   VerifyMobileOtpParams,
+// // } from '@supabase/supabase-js'
 
-interface RecoveryParams {
-  access_token?: string
-  refresh_token?: string
-  expires_in?: string
-  token_type?: string
-  type?: string
-}
+// import {}
 
-interface OtpParams extends AuthParams {
-  otp: string
-}
+// interface RecoveryParams {
+//   access_token?: string;
+//   refresh_token?: string;
+//   expires_in?: string;
+//   token_type?: string;
+//   type?: string;
+// }
 
-const getParams = (): RecoveryParams => {
-  const hash = window.location.hash.replace('#', '')
-  return hash.split('&').reduce<any>((memo, part) => {
-    const [key, value] = part.split('=')
-    memo[key] = value
-    return memo
-  }, {})
-}
+// interface OtpParams extends AuthParams {
+//   otp: string;
+// }
 
-interface SupabaseServiceAuthOptions {
-  loginOptions?: {
-    data?: object
-    /** A URL to send the user to after they are confirmed. */
-    redirectTo?: string
-    /** A space-separated list of scopes granted to the OAuth application. */
-    scopes?: string
-    /** An object of query params */
-    queryParams?: { [key: string]: string }
+// const getParams = (): RecoveryParams => {
+//   const hash = window.location.hash.replace("#", "");
+//   return hash.split("&").reduce<any>((memo, part) => {
+//     const [key, value] = part.split("=");
+//     memo[key] = value;
+//     return memo;
+//   }, {});
+// };
 
-    /** Verification token received when the user completes the captcha on the site. */
-    captchaToken?: string
-    /** The redirect url embedded in the email link */
-    emailRedirectTo?: string
-    /** If set to false, this method will not create a new user. Defaults to true. */
-    shouldCreateUser?: boolean
-  }
-  signupOptions?: {
-    emailRedirectTo?: string
-    /**
-     * A custom data object to store the user's metadata. This maps to the `auth.users.user_metadata` column.
-     *
-     * The `data` should be a JSON object that includes user-specific info, such as their first and last name.
-     */
-    data?: object
-    /** Verification token received when the user completes the captcha on the site. */
-    captchaToken?: string
-  }
-  verifyOptions?: {
-    /** A URL to send the user to after they are confirmed. */
-    redirectTo?: string
-    /** Verification token received when the user completes the captcha on the site. */
-    captchaToken?: string
-  }
-  resetPasswordOptions?: {
-    redirectTo?: string
-    captchaToken?: string
-  }
-}
+// interface SupabaseServiceAuthOptions {
+//   loginOptions?: {
+//     data?: object;
+//     /** A URL to send the user to after they are confirmed. */
+//     redirectTo?: string;
+//     /** A space-separated list of scopes granted to the OAuth application. */
+//     scopes?: string;
+//     /** An object of query params */
+//     queryParams?: { [key: string]: string };
 
-export const createAuthService = (
-  supabase: SupabaseClient<any, 'public', any>,
-  serviceOptions?: SupabaseServiceAuthOptions
-): AuthProviderProps<User> => {
-  const onLogin = async (
-    params: AuthParams,
-    authOptions?: AuthOptions<{ data?: object; captchaToken?: string }>
-  ) => {
-    const options = {
-      ...serviceOptions?.loginOptions,
-      ...authOptions,
-    }
-    function authenticate() {
-      const { email, password, provider, phone } = params
-      if (email && password) {
-        return supabase.auth.signInWithPassword({
-          email,
-          password,
-          options,
-        })
-      } else if (email) {
-        return supabase.auth.signInWithOtp({ email, options })
-      } else if (provider) {
-        return supabase.auth.signInWithOAuth({
-          provider: provider as Provider,
-          options,
-        })
-      } else if (phone && password) {
-        return supabase.auth.signInWithPassword({ phone, password, options })
-      } else if (phone) {
-        return supabase.auth.signInWithOtp({ phone, options })
-      }
-      throw new Error('Could not find correct authentication method')
-    }
-    const resp = await authenticate()
+//     /** Verification token received when the user completes the captcha on the site. */
+//     captchaToken?: string;
+//     /** The redirect url embedded in the email link */
+//     emailRedirectTo?: string;
+//     /** If set to false, this method will not create a new user. Defaults to true. */
+//     shouldCreateUser?: boolean;
+//   };
+//   signupOptions?: {
+//     emailRedirectTo?: string;
+//     /**
+//      * A custom data object to store the user's metadata. This maps to the `auth.users.user_metadata` column.
+//      *
+//      * The `data` should be a JSON object that includes user-specific info, such as their first and last name.
+//      */
+//     data?: object;
+//     /** Verification token received when the user completes the captcha on the site. */
+//     captchaToken?: string;
+//   };
+//   verifyOptions?: {
+//     /** A URL to send the user to after they are confirmed. */
+//     redirectTo?: string;
+//     /** Verification token received when the user completes the captcha on the site. */
+//     captchaToken?: string;
+//   };
+//   resetPasswordOptions?: {
+//     redirectTo?: string;
+//     captchaToken?: string;
+//   };
+// }
 
-    if (resp.error) {
-      throw resp.error
-    }
-    if (isOauthResponse(resp)) {
-      const userResp = await supabase.auth.getUser()
-      if (userResp.error) {
-        throw userResp.error
-      }
-      return userResp.data.user
-    }
-    return resp.data.user
-  }
+// export const createAuthService = (
+//   supabase: SupabaseClient<any, "public", any>,
+//   serviceOptions?: SupabaseServiceAuthOptions
+// ): AuthProviderProps<User> => {
+//   const onLogin = async (
+//     params: AuthParams,
+//     authOptions?: AuthOptions<{ data?: object; captchaToken?: string }>
+//   ) => {
+//     const options = {
+//       ...serviceOptions?.loginOptions,
+//       ...authOptions,
+//     };
+//     function authenticate() {
+//       const { email, password, provider, phone } = params;
+//       if (email && password) {
+//         return supabase.auth.signInWithPassword({
+//           email,
+//           password,
+//           options,
+//         });
+//       } else if (email) {
+//         return supabase.auth.signInWithOtp({ email, options });
+//       } else if (provider) {
+//         return supabase.auth.signInWithOAuth({
+//           provider: provider as Provider,
+//           options,
+//         });
+//       } else if (phone && password) {
+//         return supabase.auth.signInWithPassword({ phone, password, options });
+//       } else if (phone) {
+//         return supabase.auth.signInWithOtp({ phone, options });
+//       }
+//       throw new Error("Could not find correct authentication method");
+//     }
+//     const resp = await authenticate();
 
-  const onSignup = async (
-    params: AuthParams,
-    authOptions?: AuthOptions<{
-      captchaToken?: string
-      emailRedirectTo?: string
-      data?: object
-    }>
-  ) => {
-    async function signup() {
-      const { email, phone, password } = params
-      const options = {
-        ...serviceOptions?.signupOptions,
-        ...authOptions,
-      }
-      if (email && password) {
-        return await supabase.auth.signUp({
-          email,
-          password,
-          options,
-        })
-      } else if (phone && password) {
-        return await supabase.auth.signUp({
-          phone,
-          password,
-          options,
-        })
-      } else if (email) {
-        return supabase.auth.signInWithOtp({ email, options })
-      } else if (phone) {
-        return supabase.auth.signInWithOtp({ phone, options })
-      }
-    }
+//     if (resp.error) {
+//       throw resp.error;
+//     }
+//     if (isOauthResponse(resp)) {
+//       const userResp = await supabase.auth.getUser();
+//       if (userResp.error) {
+//         throw userResp.error;
+//       }
+//       return userResp.data.user;
+//     }
+//     return resp.data.user;
+//   };
 
-    const resp = await signup()
+//   const onSignup = async (
+//     params: AuthParams,
+//     authOptions?: AuthOptions<{
+//       captchaToken?: string;
+//       emailRedirectTo?: string;
+//       data?: object;
+//     }>
+//   ) => {
+//     async function signup() {
+//       const { email, phone, password } = params;
+//       const options = {
+//         ...serviceOptions?.signupOptions,
+//         ...authOptions,
+//       };
+//       if (email && password) {
+//         return await supabase.auth.signUp({
+//           email,
+//           password,
+//           options,
+//         });
+//       } else if (phone && password) {
+//         return await supabase.auth.signUp({
+//           phone,
+//           password,
+//           options,
+//         });
+//       } else if (email) {
+//         return supabase.auth.signInWithOtp({ email, options });
+//       } else if (phone) {
+//         return supabase.auth.signInWithOtp({ phone, options });
+//       }
+//     }
 
-    if (resp?.error) {
-      throw resp.error
-    }
+//     const resp = await signup();
 
-    return resp?.data.user
-  }
+//     if (resp?.error) {
+//       throw resp.error;
+//     }
 
-  const onVerifyOtp = async (
-    params: OtpParams,
-    options?: AuthOptions<{ captchaToken?: string }>
-  ) => {
-    const { email, phone, otp, type } = params
+//     return resp?.data.user;
+//   };
 
-    if (email) {
-      const verify: VerifyEmailOtpParams = {
-        email,
-        token: otp,
-        type: type || 'signup',
-        options: {
-          ...serviceOptions?.verifyOptions,
-          ...options,
-        },
-      }
-      const resp = await supabase.auth.verifyOtp(verify)
-      if (resp.error) {
-        throw resp.error
-      }
-      return Boolean(resp.data.session)
-    }
+//   const onVerifyOtp = async (
+//     params: OtpParams,
+//     options?: AuthOptions<{ captchaToken?: string }>
+//   ) => {
+//     const { email, phone, otp, type } = params;
 
-    if (phone) {
-      const verify: VerifyMobileOtpParams = {
-        phone,
-        token: otp,
-        type: type || 'sms',
-        options: {
-          ...serviceOptions?.verifyOptions,
-          ...options,
-        },
-      }
-      const resp = await supabase.auth.verifyOtp(verify)
-      if (resp.error) {
-        throw resp.error
-      }
-      return Boolean(resp.data.session)
-    }
+//     if (email) {
+//       const verify: VerifyEmailOtpParams = {
+//         email,
+//         token: otp,
+//         type: type || "signup",
+//         options: {
+//           ...serviceOptions?.verifyOptions,
+//           ...options,
+//         },
+//       };
+//       const resp = await supabase.auth.verifyOtp(verify);
+//       if (resp.error) {
+//         throw resp.error;
+//       }
+//       return Boolean(resp.data.session);
+//     }
 
-    throw new Error('You need to provide either email or phone')
-  }
+//     if (phone) {
+//       const verify: VerifyMobileOtpParams = {
+//         phone,
+//         token: otp,
+//         type: type || "sms",
+//         options: {
+//           ...serviceOptions?.verifyOptions,
+//           ...options,
+//         },
+//       };
+//       const resp = await supabase.auth.verifyOtp(verify);
+//       if (resp.error) {
+//         throw resp.error;
+//       }
+//       return Boolean(resp.data.session);
+//     }
 
-  const onLogout = async () => {
-    return await supabase.auth.signOut()
-  }
+//     throw new Error("You need to provide either email or phone");
+//   };
 
-  const onAuthStateChange = (callback: AuthStateChangeCallback<User>) => {
-    const { data } = supabase.auth.onAuthStateChange(
-      (event: AuthChangeEvent, session: Session | null) => {
-        callback(session?.user)
-      }
-    )
+//   const onLogout = async () => {
+//     return await supabase.auth.signOut();
+//   };
 
-    return () => data?.subscription.unsubscribe()
-  }
+//   const onAuthStateChange = (callback: AuthStateChangeCallback<User>) => {
+//     const { data } = supabase.auth.onAuthStateChange(
+//       (event: AuthChangeEvent, session: Session | null) => {
+//         callback(session?.user);
+//       }
+//     );
 
-  const onLoadUser = async () => {
-    const { data, error } = await supabase.auth.getUser()
-    if (error) {
-      throw error
-    }
-    return data.user
-  }
+//     return () => data?.subscription.unsubscribe();
+//   };
 
-  const onGetToken = async () => {
-    const { data, error } = await supabase.auth.getSession()
-    if (error) {
-      throw error
-    }
-    return data.session?.access_token || null
-  }
+//   const onLoadUser = async () => {
+//     const { data, error } = await supabase.auth.getUser();
+//     if (error) {
+//       throw error;
+//     }
+//     return data.user;
+//   };
 
-  const onResetPassword = async (
-    { email }: Required<Pick<AuthParams, 'email'>>,
-    options?: AuthOptions
-  ) => {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      ...serviceOptions?.resetPasswordOptions,
-      ...options,
-    })
-    if (error) {
-      throw error
-    }
-  }
+//   const onGetToken = async () => {
+//     const { data, error } = await supabase.auth.getSession();
+//     if (error) {
+//       throw error;
+//     }
+//     return data.session?.access_token || null;
+//   };
 
-  const onUpdatePassword = async ({
-    password,
-  }: Required<Pick<AuthParams, 'password'>>) => {
-    const params = getParams()
+//   const onResetPassword = async (
+//     { email }: Required<Pick<AuthParams, "email">>,
+//     options?: AuthOptions
+//   ) => {
+//     const { error } = await supabase.auth.resetPasswordForEmail(email, {
+//       ...serviceOptions?.resetPasswordOptions,
+//       ...options,
+//     });
+//     if (error) {
+//       throw error;
+//     }
+//   };
 
-    if (params?.type === 'recovery') {
-      const { error } = await supabase.auth.updateUser({
-        password,
-      })
-      if (error) {
-        throw error
-      }
-    }
-  }
+//   const onUpdatePassword = async ({
+//     password,
+//   }: Required<Pick<AuthParams, "password">>) => {
+//     const params = getParams();
 
-  return {
-    onLogin,
-    onSignup,
-    onVerifyOtp,
-    onLogout,
-    onAuthStateChange,
-    onLoadUser,
-    onGetToken,
-    onResetPassword,
-    onUpdatePassword,
-  }
-}
+//     if (params?.type === "recovery") {
+//       const { error } = await supabase.auth.updateUser({
+//         password,
+//       });
+//       if (error) {
+//         throw error;
+//       }
+//     }
+//   };
 
-function isOauthResponse(
-  response: AuthResponse | OAuthResponse
-): response is OAuthResponse {
-  return Boolean((response as OAuthResponse).data?.provider)
-}
+//   return {
+//     onLogin,
+//     onSignup,
+//     onVerifyOtp,
+//     onLogout,
+//     onAuthStateChange,
+//     onLoadUser,
+//     onGetToken,
+//     onResetPassword,
+//     onUpdatePassword,
+//   };
+// };
+
+// function isOauthResponse(
+//   response: AuthResponse | OAuthResponse
+// ): response is OAuthResponse {
+//   return Boolean((response as OAuthResponse).data?.provider);
+// }
