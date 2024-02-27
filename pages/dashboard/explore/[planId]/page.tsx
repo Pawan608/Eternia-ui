@@ -24,7 +24,7 @@ const ProductPage = () => {
   const params = useParams();
   const { userId } = useAuth();
   //get product id from params
-  const planId = params.planId;
+  const planId = params?.planId || "";
   const {
     data: planData,
     loading: planLoading,
