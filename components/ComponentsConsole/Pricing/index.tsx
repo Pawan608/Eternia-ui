@@ -2,16 +2,18 @@
 import Image from "next/image";
 import SectionHeader from "../Common/SectionHeader";
 import { useQuery } from "@apollo/client";
-import { GET_PLANS_QUERY } from "@/graphql/query";
-import { Plan } from "@/app/context/SubsContext";
+// import { GET_PLANS_QUERY } from "@/graphql/query";
+import { GET_PLANS_QUERY } from "graphql/query";
+// import { Plan } from "@/app/context/SubsContext";
 import { useRouter } from "next/navigation";
 
 const Pricing = () => {
   const { data, loading, error } = useQuery(GET_PLANS_QUERY);
+  const router = useRouter();
   if (loading) return <div>Loading...</div>;
   const plans = data?.findPlans;
   console.log(plans);
-  const router = useRouter();
+
   return (
     <>
       {/* <!-- ===== Pricing Table Start ===== --> */}
@@ -45,20 +47,23 @@ const Pricing = () => {
           <div className="flex flex-col gap-5 md:gap-7 2xl:gap-10">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
               {plans?.map((plan) => (
-                <div key={plan.id} className="animate_top group relative rounded-lg border border-stroke bg-white p-7.5 shadow-solid-10 dark:border-strokedark dark:bg-blacksection dark:shadow-none xl:p-12.5">
-                <div className="absolute -right-3.5 top-7.5 -rotate-90 rounded-bl-full rounded-tl-full bg-primary px-4.5 py-1.5 text-metatitle font-medium uppercase text-white">
-                  popular
-                </div>
-   
-                <h3 className="mb-7.5 text-3xl font-bold text-black dark:text-white xl:text-sectiontitle3">
-                ₹{plan.price}{" "}
-                  <span className="text-regular text-waterloo dark:text-manatee">
-                    /month
-                  </span>
-                </h3>
-                <h4 className="mb-2.5 text-para2 font-medium text-black dark:text-white">
-                  {plan.name}
-                </h4>
+                <div
+                  key={plan.id}
+                  className="animate_top group relative rounded-lg border border-stroke bg-white p-7.5 shadow-solid-10 dark:border-strokedark dark:bg-blacksection dark:shadow-none xl:p-12.5"
+                >
+                  <div className="absolute -right-3.5 top-7.5 -rotate-90 rounded-bl-full rounded-tl-full bg-primary px-4.5 py-1.5 text-metatitle font-medium uppercase text-white">
+                    popular
+                  </div>
+
+                  <h3 className="mb-7.5 text-3xl font-bold text-black dark:text-white xl:text-sectiontitle3">
+                    ₹{plan.price}{" "}
+                    <span className="text-regular text-waterloo dark:text-manatee">
+                      /month
+                    </span>
+                  </h3>
+                  <h4 className="mb-2.5 text-para2 font-medium text-black dark:text-white">
+                    {plan.name}
+                  </h4>
                   <h4 className="mb-5 mt-7.5 text-lg font-medium text-black dark:text-white">
                     Features
                   </h4>

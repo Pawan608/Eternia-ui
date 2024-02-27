@@ -1,9 +1,10 @@
 "use client";
-import { useAuth } from "@/app/context/AuthContext";
-import { useRequests } from "@/app/context/RequestsContext";
-import { useSubs } from "@/app/context/SubsContext";
-import { REQUEST_SUB_MUTATION } from "@/graphql/mutation";
-import { GET_PLAN_QUERY } from "@/graphql/query";
+
+import { useAuth } from "context/AuthProvider";
+import { useRequests } from "context/RequestContext";
+import { useSubs } from "context/SubsContext";
+import { REQUEST_SUB_MUTATION } from "graphql/mutation";
+import { GET_PLAN_QUERY } from "graphql/query";
 import { useMutation, useQuery } from "@apollo/client";
 import { useParams, useRouter } from "next/navigation";
 import React from "react";
@@ -41,7 +42,7 @@ const ProductPage = () => {
   // Determine if the plan has an active subscription
   const userSubscriptions = subsData || [];
   const activeSubscription = userSubscriptions.find(
-    (sub) => sub?.plan?.id === plan?.id && sub.status?.toLowerCase() == "active", // Assuming there's an `isActive` field to indicate active subscription
+    (sub) => sub?.plan?.id === plan?.id && sub.status?.toLowerCase() == "active" // Assuming there's an `isActive` field to indicate active subscription
   );
 
   // Check if there's an active subscription and extract the active date
@@ -50,7 +51,7 @@ const ProductPage = () => {
   // Determine if the plan has pending requests
   const hasPendingRequests = requestsData?.some(
     (request) =>
-      request.plan.id === planId && request.status.toLowerCase() === "pending",
+      request.plan.id === planId && request.status.toLowerCase() === "pending"
   );
 
   // Initialize the mutation with useMutation hook
@@ -101,7 +102,7 @@ const ProductPage = () => {
                   Already Subscribed
                 </span>
                 <button
-                onClick={()=>router.push(`/subscriptions`)}
+                  onClick={() => router.push(`/subscriptions`)}
                   className={`rounded bg-blue-700 px-4 py-2 font-bold text-white hover:bg-blue-800`}
                 >
                   Check Details

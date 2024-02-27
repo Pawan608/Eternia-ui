@@ -37,7 +37,7 @@ const Header = () => {
     >
       <div className="relative items-center justify-between px-4 mx-auto max-w-c-1390 md:px-8 xl:flex 2xl:px-0">
         <div className="flex items-center justify-between w-full xl:w-1/4">
-          <a href="/">
+          <Link href="/">
             <Image
               src="/images/logo/eterniasoftlogo.svg"
               alt="logo"
@@ -52,7 +52,7 @@ const Header = () => {
               height={30}
               className="w-full dark:hidden"
             />
-          </a>
+          </Link>
 
           {/* <!-- Hamburger Toggle BTN --> */}
           <button
@@ -153,7 +153,6 @@ const Header = () => {
 
           <div className="flex items-center gap-6 mt-7 xl:mt-0">
             <ThemeToggler />
-
 
             <Link
               href="/auth/signin"

@@ -46,3 +46,15 @@ export const CREATE_REQUEST = gql`
     }
   }
 `;
+
+export const REQUEST_SUB_MUTATION = gql`
+  mutation CreateRequest($createRequestInput: CreateRequestDto!) {
+    createRequest(createRequestInput: $createRequestInput) {
+      id
+      requestType
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
