@@ -62,17 +62,17 @@ const ProductPage: NextPageWithLayout = () => {
 
   // Function to call the mutation
   const handleCreateRequest = async () => {
-    const singlePlanId = Array.isArray(planId) ? planId[0] : planId;
+    const singlePlanId = Array.isArray(planId) ? planId?.[0] : planId;
     try {
       const createRequestInput: CreateRequestInput = {
         planId: singlePlanId,
-        requestType: RequestType.NewSubscription,
+        requestType: RequestType?.NewSubscription,
         userId: userId,
       };
       await createRequest({ variables: { createRequestInput } });
       // Handle the response here
       if (data) {
-        console.log("Request created:", data.createRequest);
+        console.log("Request created:", data?.createRequest);
       }
     } catch (err) {
       console.error("Error creating request:", err);
@@ -94,7 +94,7 @@ const ProductPage: NextPageWithLayout = () => {
         <div className="mb-5">
           <div className="flex items-center justify-between gap-4">
             <h2 className="mb-1.5 text-title-md2 font-bold text-black dark:text-white">
-              Explore <span className="text-blue-700">{plan.name}</span> Plan
+              Explore <span className="text-blue-700">{plan?.name}</span> Plan
             </h2>
 
             {/* Check for active subscription */}
