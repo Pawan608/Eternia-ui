@@ -36,7 +36,7 @@ const Revealer = ({ children }: any) => {
 
 const Page: NextPageWithLayout = ({}: any) => {
   const router = useRouter();
-  const productID = router.query.productID;
+  const productID: string = router.query.productID as string;
   const styles = useMultiStyleConfig("Feature");
   const { data, loading, error } = useQuery(GET_SINGLE_PRODUCT, {
     variables: {
@@ -107,7 +107,7 @@ const Page: NextPageWithLayout = ({}: any) => {
           <Pricing
             title="Pricing"
             description={`Composite Plan Including ${data?.findProduct.name} and Various Other Products`}
-            plans={data?.findProduct?.plans}
+            plans={data?.findProduct?.plans || []}
           >
             <Text p="8" textAlign="center" color="muted">
               VAT may be applicable depending on your location.
